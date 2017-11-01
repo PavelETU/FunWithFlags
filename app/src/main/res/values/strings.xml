@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Fun With Flags</string>
+    <string name="new_game">Start game</string>
+    <string name="old_flags">What I learnt?</string>
+    <string name="open_drawer">Opened drawer</string>
+    <string name="close_drawer">Closed drawer</string>
+    <string name="header_title">Fun With Flags!</string>
+</resources>
