@@ -14,6 +14,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewTreeObserver;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -29,7 +30,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         final LinearLayout toolbarWithMainContent = findViewById(R.id.toolbar_and_main_content);
         setSupportActionBar(toolbar);
 
-        final NavigationView navigationView = (NavigationView) findViewById(R.id.navigation_container);
+        final NavigationView navigationView = findViewById(R.id.navigation_container);
 
         DrawerLayout mDrawerLayout = findViewById(R.id.drawer_layout);
         mDrawerToggle = new ActionBarDrawerToggle(this,
@@ -43,7 +44,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     ViewTreeObserver observer = drawerView.getViewTreeObserver();
                     if (observer.isAlive()) {
                         observer.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-
                             @Override
                             public void onGlobalLayout() {
                                 int viewWidth = drawerView.findViewById(R.id.navigation_container).getWidth();
@@ -68,10 +68,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         // Set the drawer toggle as the DrawerListener
         mDrawerLayout.addDrawerListener(mDrawerToggle);
 
-//        NavigationView navigationView = findViewById(R.id.navigation_container);
         navigationView.setNavigationItemSelectedListener(this);
         navigationView.setCheckedItem(R.id.new_game);
 
+        GameFragment gameFragment = (GameFragment) getSupportFragmentManager().findFragmentById(R.id.main_content);
+        if (gameFragment == null) {
+            gameFragment = new GameFragment();
+            getSupportFragmentManager().beginTransaction().add(R.id.main_content, gameFragment).commit();
+        }
 
     }
 

@@ -5,4 +5,7 @@
     <string name="open_drawer">Opened drawer</string>
     <string name="close_drawer">Closed drawer</string>
     <string name="header_title">Fun With Flags!</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
