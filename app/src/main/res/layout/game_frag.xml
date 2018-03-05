@@ -1,11 +1,13 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto">
+
     <data>
+
         <variable
             name="viewmodel"
-            type="com.wordpress.lonelytripblog.funwithflags.GameViewModel"/>
+            type="com.wordpress.lonelytripblog.funwithflags.GameViewModel" />
     </data>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -22,40 +24,48 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1">
+
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
                 android:layout_alignParentTop="true"
-                android:background="@drawable/btn_background"
+                android:background="@{viewmodel.animateThisItemAsChosen.get(0) ? @drawable/btn_background_chosen : @drawable/btn_background}"
+                app:animated="@{viewmodel.animateThisItemAsRightAnswer.get(0)}"
                 android:onClick="@{() -> viewmodel.getAnswerByUser(0)}"
                 android:text="@{viewmodel.countriesList.get(0)}" />
+
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
                 android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
                 android:layout_alignParentTop="true"
-                android:background="@drawable/btn_background"
+                app:animated="@{viewmodel.animateThisItemAsRightAnswer.get(1)}"
+                android:background="@{viewmodel.animateThisItemAsChosen.get(1) ? @drawable/btn_background_chosen : @drawable/btn_background}"
                 android:onClick="@{() -> viewmodel.getAnswerByUser(1)}"
                 android:text="@{viewmodel.countriesList.get(1)}" />
+
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
-                android:layout_alignParentBottom="true"
-                android:background="@drawable/btn_background"
+                app:animated="@{viewmodel.animateThisItemAsRightAnswer.get(2)}"
+                android:background="@{viewmodel.animateThisItemAsChosen.get(2) ? @drawable/btn_background_chosen : @drawable/btn_background}"
                 android:onClick="@{() -> viewmodel.getAnswerByUser(2)}"
                 android:text="@{viewmodel.countriesList.get(2)}" />
+
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentEnd="true"
                 android:layout_alignParentBottom="true"
-                android:background="@drawable/btn_background"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                app:animated="@{viewmodel.animateThisItemAsRightAnswer.get(3)}"
+                android:background="@{viewmodel.animateThisItemAsChosen.get(3) ? @drawable/btn_background_chosen : @drawable/btn_background}"
                 android:onClick="@{() -> viewmodel.getAnswerByUser(3)}"
                 android:text="@{viewmodel.countriesList.get(3)}" />
         </RelativeLayout>

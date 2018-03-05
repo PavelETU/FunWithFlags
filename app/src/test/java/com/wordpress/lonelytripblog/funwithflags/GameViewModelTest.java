@@ -2,15 +2,19 @@ package com.wordpress.lonelytripblog.funwithflags;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Created by Павел on 04.03.2018.
  */
+@RunWith(JUnit4.class)
 public class GameViewModelTest {
 
     GameViewModel viewModel;
@@ -55,6 +59,22 @@ public class GameViewModelTest {
                 viewModel.animateThisItemAsChosen.get(wrongAnswer));
     }
 
+    @Test
+    public void selectedShouldBeOnlyLastChoosingAnswer() throws Exception {
+        // Choose
+        viewModel.getAnswerByUser(0);
+        viewModel.getAnswerByUser(1);
+        viewModel.getAnswerByUser(2);
+        viewModel.getAnswerByUser(3);
+        assertFalse(viewModel.animateThisItemAsChosen.get(0));
+        assertFalse(viewModel.animateThisItemAsChosen.get(1));
+        assertFalse(viewModel.animateThisItemAsChosen.get(2));
+        assertTrue(viewModel.animateThisItemAsChosen.get(3));
+    }
 
+    @Test
+    public void wrongAnswerStillSelectedWhenRightAnswerIsDisplayed() throws Exception {
+
+    }
 
 }
