@@ -2,10 +2,23 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
-
+        
+        <import type="java.util.List"/>
+        <import type="java.lang.String"/>
+        <import type="java.lang.Integer"/>
         <variable
-            name="viewmodel"
+            name="countriesList"
+            type="List&lt;String&gt;" />
+        <variable
+            name="rightAnswer"
+            type="Integer" />
+        <variable
+            name="countryImageResource"
+            type="String"/>
+        <variable
+            name="gameViewModel"
             type="com.wordpress.lonelytripblog.funwithflags.GameViewModel" />
+
     </data>
 
     <LinearLayout
@@ -18,7 +31,7 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="3"
-            app:setImage="@{viewmodel.countryImageResource}" />
+            app:setImage="@{countryImageResource}" />
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -31,10 +44,11 @@
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
                 android:layout_alignParentTop="true"
-                android:background="@{viewmodel.animateThisItemAsChosen.get(0) ? @drawable/btn_background_chosen : @drawable/btn_background}"
-                app:animated="@{viewmodel.animateThisItemAsRightAnswer.get(0)}"
-                android:onClick="@{() -> viewmodel.getAnswerByUser(0)}"
-                android:text="@{viewmodel.countriesList.get(0)}" />
+                android:background="@drawable/btn_background"
+                app:animate_as_chosen="@{gameViewModel.animateThisItemAsChosen.get(0)}"
+                app:animate_as_right_answer="@{gameViewModel.showRightAnswer &amp;&amp; rightAnswer == 0}"
+                android:onClick="@{() -> gameViewModel.getAnswerByUser(0)}"
+                android:text="@{countriesList.get(0)}" />
 
             <Button
                 android:layout_width="wrap_content"
@@ -42,10 +56,11 @@
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentTop="true"
-                app:animated="@{viewmodel.animateThisItemAsRightAnswer.get(1)}"
-                android:background="@{viewmodel.animateThisItemAsChosen.get(1) ? @drawable/btn_background_chosen : @drawable/btn_background}"
-                android:onClick="@{() -> viewmodel.getAnswerByUser(1)}"
-                android:text="@{viewmodel.countriesList.get(1)}" />
+                app:animate_as_chosen="@{gameViewModel.animateThisItemAsChosen.get(1)}"
+                app:animate_as_right_answer="@{gameViewModel.showRightAnswer &amp;&amp; rightAnswer == 1}"
+                android:background="@drawable/btn_background"
+                android:onClick="@{() -> gameViewModel.getAnswerByUser(1)}"
+                android:text="@{countriesList.get(1)}" />
 
             <Button
                 android:layout_width="wrap_content"
@@ -53,10 +68,11 @@
                 android:layout_alignParentBottom="true"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
-                app:animated="@{viewmodel.animateThisItemAsRightAnswer.get(2)}"
-                android:background="@{viewmodel.animateThisItemAsChosen.get(2) ? @drawable/btn_background_chosen : @drawable/btn_background}"
-                android:onClick="@{() -> viewmodel.getAnswerByUser(2)}"
-                android:text="@{viewmodel.countriesList.get(2)}" />
+                app:animate_as_chosen="@{gameViewModel.animateThisItemAsChosen.get(2)}"
+                app:animate_as_right_answer="@{gameViewModel.showRightAnswer &amp;&amp; rightAnswer == 2}"
+                android:background="@drawable/btn_background"
+                android:onClick="@{() -> gameViewModel.getAnswerByUser(2)}"
+                android:text="@{countriesList.get(2)}" />
 
             <Button
                 android:layout_width="wrap_content"
@@ -64,10 +80,11 @@
                 android:layout_alignParentBottom="true"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentRight="true"
-                app:animated="@{viewmodel.animateThisItemAsRightAnswer.get(3)}"
-                android:background="@{viewmodel.animateThisItemAsChosen.get(3) ? @drawable/btn_background_chosen : @drawable/btn_background}"
-                android:onClick="@{() -> viewmodel.getAnswerByUser(3)}"
-                android:text="@{viewmodel.countriesList.get(3)}" />
+                app:animate_as_chosen="@{gameViewModel.animateThisItemAsChosen.get(3)}"
+                app:animate_as_right_answer="@{gameViewModel.showRightAnswer &amp;&amp; rightAnswer == 3}"
+                android:background="@drawable/btn_background"
+                android:onClick="@{() -> gameViewModel.getAnswerByUser(3)}"
+                android:text="@{countriesList.get(3)}" />
         </RelativeLayout>
 
     </LinearLayout>

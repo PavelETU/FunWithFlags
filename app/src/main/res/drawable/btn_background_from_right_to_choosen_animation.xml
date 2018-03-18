@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<animation-list android:oneshot="true"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="@drawable/btn_background" android:duration="100"/>
+    <item android:drawable="@drawable/btn_background_chosen" android:duration="500"/>
+
+</animation-list>
