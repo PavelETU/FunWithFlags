@@ -11,6 +11,7 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.TransitionDrawable;
 import android.os.Build;
 import android.support.annotation.NonNull;
+import android.support.transition.TransitionManager;
 import android.support.v4.content.ContextCompat;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -69,6 +70,7 @@ public class GameViewModel extends ViewModel {
 
     @BindingAdapter(value = {"animate_as_chosen", "animate_as_right_answer"}, requireAll = false)
     public static void setAnimation(final Button view, final Boolean showAsChosen, final Boolean showAsRightAnswer) {
+        //TransitionManager.beginDelayedTransition();
         Drawable secondDrawable = null;
         if (showAsChosen && !showAsRightAnswer) {
             secondDrawable = ContextCompat.getDrawable(view.getContext(),
