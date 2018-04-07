@@ -4,6 +4,10 @@ import android.arch.core.executor.testing.InstantTaskExecutorRule;
 import android.arch.lifecycle.MutableLiveData;
 import android.widget.Button;
 
+import com.wordpress.lonelytripblog.funwithflags.data.GameEntity;
+import com.wordpress.lonelytripblog.funwithflags.data.GameRepo;
+import com.wordpress.lonelytripblog.funwithflags.viewmodels.GameViewModel;
+
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -14,8 +18,6 @@ import org.mockito.MockitoAnnotations;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-
-import javax.inject.Inject;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;

@@ -1,6 +1,7 @@
-package com.wordpress.lonelytripblog.funwithflags;
+package com.wordpress.lonelytripblog.funwithflags.ui;
 
 
+import android.app.Application;
 import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
@@ -10,6 +11,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.wordpress.lonelytripblog.funwithflags.FunWithFlagApp;
+import com.wordpress.lonelytripblog.funwithflags.di.InjectableFragment;
+import com.wordpress.lonelytripblog.funwithflags.viewmodels.GameViewModel;
 import com.wordpress.lonelytripblog.funwithflags.databinding.GameFragBinding;
 
 import javax.inject.Inject;
@@ -18,31 +22,28 @@ import javax.inject.Inject;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class GameFragment extends Fragment {
+public class GameFragment extends Fragment implements InjectableFragment {
 
-    private GameViewModel viewModel;
+    public GameViewModel viewModel;
     private GameFragBinding mGameFragBinding;
 
     @Inject
-    ViewModelProvider.Factory viewModelFactory;
+    public ViewModelProvider.Factory viewModelFactory;
 
 
     public GameFragment() {
         // Required empty public constructor
     }
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         mGameFragBinding = GameFragBinding.inflate(inflater, container, false);
-        View root = mGameFragBinding.getRoot();
-        return root;
+        return mGameFragBinding.getRoot();
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        FunWithFlagApp.getViewModelComponent().injectToFragmentWithGame(this);
         super.onActivityCreated(savedInstanceState);
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(GameViewModel.class);
         mGameFragBinding.setGameViewModel(viewModel);

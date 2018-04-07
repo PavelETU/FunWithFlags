@@ -3,10 +3,9 @@ package com.wordpress.lonelytripblog.funwithflags.di;
 import android.arch.lifecycle.ViewModelProvider;
 import android.support.annotation.NonNull;
 
-import com.wordpress.lonelytripblog.funwithflags.GameRepo;
-import com.wordpress.lonelytripblog.funwithflags.GameRepository;
-import com.wordpress.lonelytripblog.funwithflags.GameViewModel;
-import com.wordpress.lonelytripblog.funwithflags.GameViewModel.GameViewModelFactory;
+import com.wordpress.lonelytripblog.funwithflags.data.GameRepo;
+import com.wordpress.lonelytripblog.funwithflags.data.GameRepository;
+import com.wordpress.lonelytripblog.funwithflags.viewmodels.GameViewModel.GameViewModelFactory;
 
 import javax.inject.Singleton;
 
@@ -22,12 +21,14 @@ public class ViewModelModule {
 
     @Provides
     @NonNull
+    @Singleton
     static GameRepo gameRepo() {
         return new GameRepository();
     }
 
     @Provides
     @NonNull
+    @Singleton
     static ViewModelProvider.Factory provideViewModelFactory(GameRepo gameRepo) {
         return new GameViewModelFactory(gameRepo);
     }

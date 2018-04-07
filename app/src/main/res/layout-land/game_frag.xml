@@ -18,7 +18,7 @@
             type="String"/>
         <variable
             name="gameViewModel"
-            type="com.wordpress.lonelytripblog.funwithflags.GameViewModel" />
+            type="com.wordpress.lonelytripblog.funwithflags.viewmodels.GameViewModel" />
 
     </data>
 
@@ -63,6 +63,28 @@
 
         <Button
             android:id="@+id/button2"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/btn_background"
+            android:onClick="@{() -> gameViewModel.getAnswerByUser(1)}"
+            android:text="@{countriesList.get(1)}"
+            app:animate_as_chosen="@{gameViewModel.animateThisItemAsChosen.get(1)}"
+            app:animate_as_right_answer="@{gameViewModel.showRightAnswer &amp;&amp; rightAnswer == 1}"
+            app:layout_constraintBottom_toTopOf="@+id/guideline4"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.502"
+            app:layout_constraintStart_toEndOf="@+id/guideline"
+            app:layout_constraintTop_toTopOf="@+id/guideline3" />
+
+        <Button
+            android:id="@+id/button3"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_alignParentBottom="true"
@@ -145,27 +167,6 @@
             android:orientation="horizontal"
             app:layout_constraintGuide_percent="0.9" />
 
-        <Button
-            android:id="@+id/button3"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginBottom="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:background="@drawable/btn_background"
-            android:onClick="@{() -> gameViewModel.getAnswerByUser(1)}"
-            android:text="@{countriesList.get(1)}"
-            app:animate_as_chosen="@{gameViewModel.animateThisItemAsChosen.get(1)}"
-            app:animate_as_right_answer="@{gameViewModel.showRightAnswer &amp;&amp; rightAnswer == 1}"
-            app:layout_constraintBottom_toTopOf="@+id/guideline4"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.502"
-            app:layout_constraintStart_toEndOf="@+id/guideline"
-            app:layout_constraintTop_toTopOf="@+id/guideline3" />
 
     </android.support.constraint.ConstraintLayout>
 

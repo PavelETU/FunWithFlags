@@ -1,4 +1,4 @@
-package com.wordpress.lonelytripblog.funwithflags;
+package com.wordpress.lonelytripblog.funwithflags.viewmodels;
 
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.ViewModel;
@@ -11,12 +11,14 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.TransitionDrawable;
 import android.os.Build;
 import android.support.annotation.NonNull;
-import android.support.transition.TransitionManager;
 import android.support.v4.content.ContextCompat;
 import android.widget.Button;
 import android.widget.ImageView;
 
 import com.squareup.picasso.Picasso;
+import com.wordpress.lonelytripblog.funwithflags.R;
+import com.wordpress.lonelytripblog.funwithflags.data.GameEntity;
+import com.wordpress.lonelytripblog.funwithflags.data.GameRepo;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -72,6 +74,7 @@ public class GameViewModel extends ViewModel {
     public static void setAnimation(final Button view, final Boolean showAsChosen, final Boolean showAsRightAnswer) {
         //TransitionManager.beginDelayedTransition();
         Drawable secondDrawable = null;
+        if (view == null || showAsChosen == null || showAsRightAnswer == null) return;
         if (showAsChosen && !showAsRightAnswer) {
             secondDrawable = ContextCompat.getDrawable(view.getContext(),
                     R.drawable.btn_background_chosen);

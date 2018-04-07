@@ -1,4 +1,4 @@
-package com.wordpress.lonelytripblog.funwithflags;
+package com.wordpress.lonelytripblog.funwithflags.data;
 
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
