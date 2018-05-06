@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 
 import com.wordpress.lonelytripblog.funwithflags.data.GameRepo;
 import com.wordpress.lonelytripblog.funwithflags.data.GameRepository;
+import com.wordpress.lonelytripblog.funwithflags.util.Counter;
 import com.wordpress.lonelytripblog.funwithflags.viewmodels.GameViewModel.GameViewModelFactory;
 
 import javax.inject.Singleton;
@@ -29,8 +30,15 @@ public class ViewModelModule {
     @Provides
     @NonNull
     @Singleton
-    static ViewModelProvider.Factory provideViewModelFactory(GameRepo gameRepo) {
-        return new GameViewModelFactory(gameRepo);
+    static Counter getCounter() {
+        return new Counter();
+    }
+
+    @Provides
+    @NonNull
+    @Singleton
+    static ViewModelProvider.Factory provideViewModelFactory(GameRepo gameRepo, Counter counter) {
+        return new GameViewModelFactory(gameRepo, counter);
     }
 
 }

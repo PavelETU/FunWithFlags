@@ -2,10 +2,11 @@ package com.wordpress.lonelytripblog.funwithflags;
 
 import android.arch.core.executor.testing.InstantTaskExecutorRule;
 import android.arch.lifecycle.MutableLiveData;
-import android.widget.Button;
 
+import com.wordpress.lonelytripblog.funwithflags.data.CallbackForTimer;
 import com.wordpress.lonelytripblog.funwithflags.data.GameEntity;
 import com.wordpress.lonelytripblog.funwithflags.data.GameRepo;
+import com.wordpress.lonelytripblog.funwithflags.util.Counter;
 import com.wordpress.lonelytripblog.funwithflags.viewmodels.GameViewModel;
 
 import org.junit.Before;
@@ -15,13 +16,17 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.mockito.stubbing.Answer;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.mock;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 /**
@@ -33,23 +38,25 @@ public class GameViewModelTest {
     @Rule
     public InstantTaskExecutorRule ruleForTestingArchitectureComponents = new InstantTaskExecutorRule();
     @Mock
-    GameRepo gameRepo;
-    GameViewModel viewModel;
-    GameEntity currentGameEntity;
+    private GameRepo gameRepo;
+    @Mock
+    private Counter counter;
+    private GameViewModel viewModel;
 
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
-        currentGameEntity = new GameEntity("http://www.countryflags.io/de/shiny/64.png",
+        GameEntity currentGameEntity = new GameEntity("http://www.countryflags.io/de/shiny/64.png",
                 new ArrayList<>(Arrays.asList("Russia", "USA", "Thailand", "Germany")), 3);
-        viewModel = new GameViewModel(gameRepo);
         MutableLiveData<GameEntity> result = new MutableLiveData<>();
         result.setValue(currentGameEntity);
-        when(gameRepo.getNewFlag()).then(invocation -> result);
+        when(gameRepo.getLiveDataForGame()).then(invocation -> result);
+        viewModel = new GameViewModel(gameRepo, counter);
     }
 
     @Test
-    public void showRightAnswerAfterAnythingChosen() throws Exception {
+    public void showRightAnswerAfterAnythingChosen() {
+        doAnswer((Answer<Void>) invocation -> null).when(counter).startCounter(any(CallbackForTimer.class));
         // Choose
         int currentAnswer = 0;
         viewModel.getAnswerByUser(currentAnswer);
@@ -61,7 +68,7 @@ public class GameViewModelTest {
     }
 
     @Test
-    public void whenMultiplyChoicesIsMadeSelectedOnlyLastAndNoAnswerIsShowing() throws Exception {
+    public void whenMultiplyChoicesIsMadeSelectedOnlyLastAndNoAnswerIsShowing() {
         // Choose
         viewModel.getAnswerByUser(0);
         viewModel.getAnswerByUser(1);
@@ -75,7 +82,8 @@ public class GameViewModelTest {
     }
 
     @Test
-    public void madeMultipleChoicesAndGiveAnswer() throws Exception {
+    public void madeMultipleChoicesAndGiveAnswer() {
+        doAnswer((Answer<Void>) invocation -> null).when(counter).startCounter(any(CallbackForTimer.class));
         // Choose
         viewModel.getAnswerByUser(0);
         viewModel.getAnswerByUser(3);
@@ -92,10 +100,16 @@ public class GameViewModelTest {
     }
 
     @Test
-    public void animateButtonAsChosen() {
-        Button fakeButton = mock(Button.class);
-        GameViewModel.setAnimation(fakeButton, true, false);
-
+    public void repoRequestedAfterQuestionIsAnswered() {
+        // Call onTimerStop right after startCounter was called (disable animation)
+        doAnswer((Answer<Void>) invocation -> {
+            CallbackForTimer callback = invocation.getArgument(0);
+            callback.doOnTimerStop();
+            return null;
+        }).when(counter).startCounter(any(CallbackForTimer.class));
+        viewModel.getAnswerByUser(0);
+        viewModel.getAnswerByUser(0);
+        verify(gameRepo, times(1)).requestNewFlags();
     }
 
 }

@@ -15,13 +15,23 @@ import javax.inject.Singleton;
 @Singleton
 public class GameRepository implements GameRepo {
 
+    private MutableLiveData<GameEntity> result;
 
-    @Override
-    public LiveData<GameEntity> getNewFlag() {
-        MutableLiveData<GameEntity> result = new MutableLiveData<>();
+    public GameRepository() {
+        result = new MutableLiveData<>();
         result.setValue(new GameEntity("http://www.countryflags.io/de/shiny/64.png",
                 new ArrayList<>(Arrays.asList("Russia", "USA", "Thailand", "Germany")), 3));
+    }
+
+    @Override
+    public LiveData<GameEntity> getLiveDataForGame() {
         return result;
+    }
+
+    @Override
+    public void requestNewFlags() {
+        result.setValue(new GameEntity("http://www.countryflags.io/ca/shiny/64.png",
+                new ArrayList<>(Arrays.asList("Canada", "USA", "Thailand", "Germany")), 0));
     }
 
     @Override

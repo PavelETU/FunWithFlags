@@ -17,8 +17,10 @@ import android.widget.ImageView;
 
 import com.squareup.picasso.Picasso;
 import com.wordpress.lonelytripblog.funwithflags.R;
+import com.wordpress.lonelytripblog.funwithflags.data.CallbackForTimer;
 import com.wordpress.lonelytripblog.funwithflags.data.GameEntity;
 import com.wordpress.lonelytripblog.funwithflags.data.GameRepo;
+import com.wordpress.lonelytripblog.funwithflags.util.Counter;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -31,17 +33,19 @@ import javax.inject.Inject;
  * Created by Павел on 29.12.2017.
  */
 
-public class GameViewModel extends ViewModel {
+public class GameViewModel extends ViewModel implements CallbackForTimer {
 
     public final ObservableList<Boolean> animateThisItemAsChosen = new ObservableArrayList<>();
     public final ObservableBoolean showRightAnswer = new ObservableBoolean();
     private int lastChosenPosition = -1;
 
     private GameRepo gameRepository;
+    private Counter counter;
 
     @Inject
-    public GameViewModel(@NonNull final GameRepo gameRepo) {
+    public GameViewModel(@NonNull final GameRepo gameRepo, @NonNull final Counter counter) {
         gameRepository = gameRepo;
+        this.counter = counter;
         initVariables();
     }
 
@@ -52,7 +56,7 @@ public class GameViewModel extends ViewModel {
     }
 
     public LiveData<GameEntity> getGameEntity() {
-        return gameRepository.getNewFlag();
+        return gameRepository.getLiveDataForGame();
     }
 
     /*
@@ -66,13 +70,25 @@ public class GameViewModel extends ViewModel {
             animateThisItemAsChosen.set(userAnswer, true);
         } else {
             showRightAnswer.set(true);
+            counter.startCounter(this);
         }
         lastChosenPosition = userAnswer;
     }
 
-    @BindingAdapter(value = {"animate_as_chosen", "animate_as_right_answer"}, requireAll = false)
+    @Override
+    public void doOnTimerStop() {
+        resetValues();
+        gameRepository.requestNewFlags();
+    }
+
+    private void resetValues() {
+        showRightAnswer.set(false);
+        animateThisItemAsChosen.set(lastChosenPosition, false);
+        lastChosenPosition = -1;
+    }
+
+    @BindingAdapter(value = {"animate_as_chosen", "animate_as_right_answer"})
     public static void setAnimation(final Button view, final Boolean showAsChosen, final Boolean showAsRightAnswer) {
-        //TransitionManager.beginDelayedTransition();
         Drawable secondDrawable = null;
         if (view == null || showAsChosen == null || showAsRightAnswer == null) return;
         if (showAsChosen && !showAsRightAnswer) {
@@ -97,35 +113,6 @@ public class GameViewModel extends ViewModel {
             }
             myDraw.startTransition(1000);
         }
-//        view.setBackgroundResource(R.drawable.btn_background_chosen);
-//        Animation fadeIn = AnimationUtils.loadAnimation(view.getContext(), R.anim.fade_in);
-//        view.startAnimation(fadeIn);
-//        fadeIn.setAnimationListener(new Animation.AnimationListener() {
-//            @Override
-//            public void onAnimationStart(Animation animation) {
-//
-//            }
-//
-//            @Override
-//            public void onAnimationEnd(Animation animation) {
-//
-//            }
-//
-//            @Override
-//            public void onAnimationRepeat(Animation animation) {
-//
-//            }
-//        });
-//        AnimationDrawable animation = (AnimationDrawable)
-//                (view.getBackground() instanceof AnimationDrawable ? view.getBackground() : null);
-//        if (animation != null) {
-//            animation.setEnterFadeDuration(500);
-//            animation.setExitFadeDuration(500);
-//            animation.start();
-//        }
-//        if (showAsRightAnswer != null && showAsRightAnswer) {
-//            view.setBackgroundResource(R.drawable.btn_background_right_answer);
-//        }
     }
 
     @BindingAdapter("setImage")
@@ -138,17 +125,19 @@ public class GameViewModel extends ViewModel {
     public static class GameViewModelFactory implements ViewModelProvider.Factory {
 
         private final GameRepo gameRepo;
+        private final Counter counter;
 
         @Inject
-        public GameViewModelFactory(GameRepo gameRepo) {
+        public GameViewModelFactory(GameRepo gameRepo, Counter counter) {
             this.gameRepo = gameRepo;
+            this.counter = counter;
         }
 
         @NonNull
         @Override
         @SuppressWarnings("unchecked overriding")
         public GameViewModel create(@NonNull Class modelClass) {
-            return new GameViewModel(gameRepo);
+            return new GameViewModel(gameRepo, counter);
         }
     }
 

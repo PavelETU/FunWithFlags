@@ -7,6 +7,7 @@ import android.arch.lifecycle.LiveData;
  */
 
 public interface GameRepo {
-    public LiveData<GameEntity> getNewFlag();
-    public LiveData<GameEntity> getLearntFlag();
+    LiveData<GameEntity> getLiveDataForGame();
+    void requestNewFlags();
+    LiveData<GameEntity> getLearntFlag();
 }
