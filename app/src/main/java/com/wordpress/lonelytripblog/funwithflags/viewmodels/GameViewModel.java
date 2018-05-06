@@ -116,10 +116,9 @@ public class GameViewModel extends ViewModel implements CallbackForTimer {
     }
 
     @BindingAdapter("setImage")
-    public static void setImageByPicasso(final ImageView view, final String imageUrl) {
-        if (imageUrl != null) {
-            Picasso.with(view.getContext()).load(imageUrl).into(view);
-        }
+    public static void setImage(final ImageView view, final Integer imageUrl) {
+        if (view == null || imageUrl == null) return;
+        view.setImageResource(imageUrl);
     }
 
     public static class GameViewModelFactory implements ViewModelProvider.Factory {

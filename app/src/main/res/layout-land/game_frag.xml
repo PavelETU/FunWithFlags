@@ -15,7 +15,7 @@
             type="Integer" />
         <variable
             name="countryImageResource"
-            type="String"/>
+            type="Integer"/>
         <variable
             name="gameViewModel"
             type="com.wordpress.lonelytripblog.funwithflags.viewmodels.GameViewModel" />

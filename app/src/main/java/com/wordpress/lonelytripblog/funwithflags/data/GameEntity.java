@@ -12,25 +12,25 @@ import java.util.List;
 public class GameEntity {
 
     @NonNull
-    private String countryImageUrl;
+    private Integer countryImageUrl;
     @NonNull
     private List<String> countries = new ArrayList<>(4);
     @NonNull
     private Integer rightAnswer;
 
 
-    public GameEntity(@NonNull String countryImageUrl, @NonNull List<String> countries, @NonNull Integer rightAnswer) {
+    public GameEntity(@NonNull Integer countryImageUrl, @NonNull List<String> countries, @NonNull Integer rightAnswer) {
         this.countryImageUrl = countryImageUrl;
         this.countries = countries;
         this.rightAnswer = rightAnswer;
     }
 
     @NonNull
-    public String getCountryImageUrl() {
+    public Integer getCountryImageUrl() {
         return countryImageUrl;
     }
 
-    public void setCountryImageUrl(@NonNull String countryImageUrl) {
+    public void setCountryImageUrl(@NonNull Integer countryImageUrl) {
         this.countryImageUrl = countryImageUrl;
     }
 
