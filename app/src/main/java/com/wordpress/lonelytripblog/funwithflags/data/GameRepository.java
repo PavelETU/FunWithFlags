@@ -63,7 +63,7 @@ public class GameRepository implements GameRepo {
     }
 
     @Override
-    public void requestNewFlags() {
+    public void nextFlag() {
         if (gameEntities.size() == 0) {
             gameEntities = new ArrayList<>(Arrays.asList(
                     new GameEntity(R.drawable.germany,
@@ -97,7 +97,17 @@ public class GameRepository implements GameRepo {
     }
 
     @Override
+    public void saveCurrentFlagIntoLearntFlags() {
+
+    }
+
+    @Override
     public LiveData<GameEntity> getLearntFlag() {
         return null;
+    }
+
+    @Override
+    public void nextLearntFlag() {
+
     }
 }

@@ -49,7 +49,7 @@ public class GameFragment extends Fragment implements InjectableFragment {
             if (result != null) {
                 mGameFragBinding.setCountriesList(result.getCountries());
                 mGameFragBinding.setCountryImageResource(result.getCountryImageUrl());
-                mGameFragBinding.setRightAnswer(result.getRightAnswer());
+                viewModel.setRightAnswer(result.getRightAnswer());
             }
         });
     }

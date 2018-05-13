@@ -36,8 +36,9 @@ import javax.inject.Inject;
 public class GameViewModel extends ViewModel implements CallbackForTimer {
 
     public final ObservableList<Boolean> animateThisItemAsChosen = new ObservableArrayList<>();
-    public final ObservableBoolean showRightAnswer = new ObservableBoolean();
+    public final ObservableList<Boolean> showAsRightAnswer = new ObservableArrayList<>();
     private int lastChosenPosition = -1;
+    private int rightAnswerPosition = -1;
 
     private GameRepo gameRepository;
     private Counter counter;
@@ -53,7 +54,7 @@ public class GameViewModel extends ViewModel implements CallbackForTimer {
     private void initVariables() {
         List<Boolean> dullList = new ArrayList<>(Arrays.asList(false, false, false, false));
         animateThisItemAsChosen.addAll(dullList);
-        showRightAnswer.set(false);
+        showAsRightAnswer.addAll(dullList);
         amountOfButtonsAnimatedBeforeRotation = 0;
     }
 
@@ -63,7 +64,7 @@ public class GameViewModel extends ViewModel implements CallbackForTimer {
 
     // Workaround to not show buttons animation after rotation
     public void beforeRemoveObserver() {
-        if (showRightAnswer.get()) {
+        if (showAsRightAnswer.get(0) || showAsRightAnswer.get(1) || showAsRightAnswer.get(2) || showAsRightAnswer.get(3)) {
             // In case of different chosen and right answer two buttons were animated. Neglect other case for now
             amountOfButtonsAnimatedBeforeRotation = 2;
         } else if (lastChosenPosition != -1) {
@@ -82,23 +83,35 @@ public class GameViewModel extends ViewModel implements CallbackForTimer {
                 animateThisItemAsChosen.set(lastChosenPosition, false);
             }
             animateThisItemAsChosen.set(userAnswer, true);
+        // User confirms answer
         } else {
-            showRightAnswer.set(true);
+            if (userAnswer == rightAnswerPosition) {
+                gameRepository.saveCurrentFlagIntoLearntFlags();
+            }
+            showAsRightAnswer.set(rightAnswerPosition, true);
             counter.startCounter(this);
         }
         lastChosenPosition = userAnswer;
     }
 
+    public void setRightAnswer(int position) {
+        rightAnswerPosition = position;
+    }
+
     @Override
     public void doOnTimerStop() {
         resetValues();
-        gameRepository.requestNewFlags();
+        gameRepository.nextFlag();
     }
 
     private void resetValues() {
-        showRightAnswer.set(false);
-        animateThisItemAsChosen.set(lastChosenPosition, false);
-        lastChosenPosition = -1;
+        if (lastChosenPosition != -1) {
+            animateThisItemAsChosen.set(lastChosenPosition, false);
+            lastChosenPosition = -1;
+        }
+        if (rightAnswerPosition != -1 && showAsRightAnswer.get(rightAnswerPosition)) {
+            showAsRightAnswer.set(rightAnswerPosition, false);
+        }
     }
 
     @BindingAdapter(value = {"animate_as_chosen", "animate_as_right_answer"})

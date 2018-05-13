@@ -14,7 +14,7 @@ public class GameEntity {
     @NonNull
     private Integer countryImageUrl;
     @NonNull
-    private List<String> countries = new ArrayList<>(4);
+    private List<String> countries;
     @NonNull
     private Integer rightAnswer;
 

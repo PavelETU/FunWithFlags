@@ -4,16 +4,12 @@
 
     <data>
 
-        <import type="java.lang.Integer"/>
         <variable
             name="countriesList"
             type="java.util.List&lt;java.lang.String&gt;" />
         <variable
-            name="rightAnswer"
-            type="Integer" />
-        <variable
             name="countryImageResource"
-            type="Integer"/>
+            type="java.lang.Integer"/>
         <variable
             name="gameViewModel"
             type="com.wordpress.lonelytripblog.funwithflags.viewmodels.GameViewModel" />
@@ -53,7 +49,7 @@
             android:onClick="@{() -> gameViewModel.getAnswerByUser(0)}"
             android:text="@{countriesList.get(0)}"
             app:animate_as_chosen="@{gameViewModel.animateThisItemAsChosen.get(0)}"
-            app:animate_as_right_answer="@{gameViewModel.showRightAnswer &amp;&amp; rightAnswer == 0}"
+            app:animate_as_right_answer="@{gameViewModel.showAsRightAnswer.get(0)}"
             app:layout_constraintBottom_toTopOf="@+id/guideline4"
             app:layout_constraintTop_toBottomOf="@+id/guideline"
             app:layout_constraintEnd_toStartOf="@+id/guideline3"
@@ -74,7 +70,7 @@
             android:onClick="@{() -> gameViewModel.getAnswerByUser(1)}"
             android:text="@{countriesList.get(1)}"
             app:animate_as_chosen="@{gameViewModel.animateThisItemAsChosen.get(1)}"
-            app:animate_as_right_answer="@{gameViewModel.showRightAnswer &amp;&amp; rightAnswer == 1}"
+            app:animate_as_right_answer="@{gameViewModel.showAsRightAnswer.get(1)}"
             app:layout_constraintBottom_toTopOf="@+id/guideline5"
             app:layout_constraintEnd_toStartOf="@+id/guideline3"
             app:layout_constraintStart_toStartOf="parent"
@@ -95,7 +91,7 @@
             android:onClick="@{() -> gameViewModel.getAnswerByUser(2)}"
             android:text="@{countriesList.get(2)}"
             app:animate_as_chosen="@{gameViewModel.animateThisItemAsChosen.get(2)}"
-            app:animate_as_right_answer="@{gameViewModel.showRightAnswer &amp;&amp; rightAnswer == 2}"
+            app:animate_as_right_answer="@{gameViewModel.showAsRightAnswer.get(2)}"
             app:layout_constraintBottom_toTopOf="@+id/guideline4"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/guideline3"
@@ -116,7 +112,7 @@
             android:onClick="@{() -> gameViewModel.getAnswerByUser(3)}"
             android:text="@{countriesList.get(3)}"
             app:animate_as_chosen="@{gameViewModel.animateThisItemAsChosen.get(3)}"
-            app:animate_as_right_answer="@{gameViewModel.showRightAnswer &amp;&amp; rightAnswer == 3}"
+            app:animate_as_right_answer="@{gameViewModel.showAsRightAnswer.get(3)}"
             app:layout_constraintBottom_toTopOf="@+id/guideline5"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/guideline3"
