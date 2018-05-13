@@ -12,10 +12,10 @@ import android.graphics.drawable.TransitionDrawable;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 
-import com.squareup.picasso.Picasso;
 import com.wordpress.lonelytripblog.funwithflags.R;
 import com.wordpress.lonelytripblog.funwithflags.data.CallbackForTimer;
 import com.wordpress.lonelytripblog.funwithflags.data.GameEntity;
@@ -41,6 +41,7 @@ public class GameViewModel extends ViewModel implements CallbackForTimer {
 
     private GameRepo gameRepository;
     private Counter counter;
+    private static int amountOfButtonsAnimatedBeforeRotation;
 
     @Inject
     public GameViewModel(@NonNull final GameRepo gameRepo, @NonNull final Counter counter) {
@@ -53,10 +54,23 @@ public class GameViewModel extends ViewModel implements CallbackForTimer {
         List<Boolean> dullList = new ArrayList<>(Arrays.asList(false, false, false, false));
         animateThisItemAsChosen.addAll(dullList);
         showRightAnswer.set(false);
+        amountOfButtonsAnimatedBeforeRotation = 0;
     }
 
     public LiveData<GameEntity> getGameEntity() {
         return gameRepository.getLiveDataForGame();
+    }
+
+    // Workaround to not show buttons animation after rotation
+    public void beforeRemoveObserver() {
+        if (showRightAnswer.get()) {
+            // In case of different chosen and right answer two buttons were animated. Neglect other case for now
+            amountOfButtonsAnimatedBeforeRotation = 2;
+        } else if (lastChosenPosition != -1) {
+            amountOfButtonsAnimatedBeforeRotation = 1;
+        } else {
+            amountOfButtonsAnimatedBeforeRotation = 0;
+        }
     }
 
     /*
@@ -104,14 +118,32 @@ public class GameViewModel extends ViewModel implements CallbackForTimer {
                     R.drawable.btn_background);
         }
         if (secondDrawable != null) {
-            TransitionDrawable myDraw = new TransitionDrawable(new Drawable[]{view.getBackground(),
-                    secondDrawable});
-            if (Build.VERSION.SDK_INT >= 16) {
-                view.setBackground(myDraw);
+            // Do not animate button after rotation and during default background setting
+            if (amountOfButtonsAnimatedBeforeRotation != 0 || (!showAsChosen && !showAsRightAnswer)) {
+                setDrawableForImage(view, secondDrawable);
             } else {
-                view.setBackgroundDrawable(myDraw);
+                TransitionDrawable myDraw = new TransitionDrawable(new Drawable[]{view.getBackground(),
+                        secondDrawable});
+                setDrawableForImage(view, myDraw);
+                myDraw.startTransition(1000);
             }
-            myDraw.startTransition(1000);
+        }
+        // Workaround for not showing buttons animation after screen rotation
+        if (amountOfButtonsAnimatedBeforeRotation != 0 && (showAsChosen || showAsRightAnswer)) {
+            // Handle case when right answer chosen before rotation
+            if ((amountOfButtonsAnimatedBeforeRotation == 1) || (showAsChosen && showAsRightAnswer)) {
+                amountOfButtonsAnimatedBeforeRotation = 0;
+            } else if (amountOfButtonsAnimatedBeforeRotation == 2) {
+                amountOfButtonsAnimatedBeforeRotation--;
+            }
+        }
+    }
+
+    private static void setDrawableForImage(View view, Drawable drawableToSet) {
+        if (Build.VERSION.SDK_INT >= 16) {
+            view.setBackground(drawableToSet);
+        } else {
+            view.setBackgroundDrawable(drawableToSet);
         }
     }
 

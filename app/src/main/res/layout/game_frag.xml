@@ -3,13 +3,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
-        
-        <import type="java.util.List"/>
-        <import type="java.lang.String"/>
+
         <import type="java.lang.Integer"/>
         <variable
             name="countriesList"
-            type="List&lt;String&gt;" />
+            type="java.util.List&lt;java.lang.String&gt;" />
         <variable
             name="rightAnswer"
             type="Integer" />

@@ -1,7 +1,6 @@
 package com.wordpress.lonelytripblog.funwithflags.ui;
 
 
-import android.app.Application;
 import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
@@ -11,10 +10,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.wordpress.lonelytripblog.funwithflags.FunWithFlagApp;
+import com.wordpress.lonelytripblog.funwithflags.databinding.GameFragBinding;
 import com.wordpress.lonelytripblog.funwithflags.di.InjectableFragment;
 import com.wordpress.lonelytripblog.funwithflags.viewmodels.GameViewModel;
-import com.wordpress.lonelytripblog.funwithflags.databinding.GameFragBinding;
 
 import javax.inject.Inject;
 
@@ -54,6 +52,13 @@ public class GameFragment extends Fragment implements InjectableFragment {
                 mGameFragBinding.setRightAnswer(result.getRightAnswer());
             }
         });
+    }
+
+    @Override
+    public void onDestroyView() {
+        viewModel.beforeRemoveObserver();
+        viewModel.getGameEntity().removeObservers(this);
+        super.onDestroyView();
     }
 
 }

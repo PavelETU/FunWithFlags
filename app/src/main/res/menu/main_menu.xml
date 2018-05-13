@@ -2,6 +2,10 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <group android:checkableBehavior="single">
         <item
+            android:id="@+id/home_page"
+            android:title="@string/home_page"
+            android:icon="@android:drawable/ic_menu_directions"/>
+        <item
             android:id="@+id/new_game"
             android:title="@string/new_game"
             android:icon="@android:drawable/ic_media_play"/>
@@ -9,5 +13,9 @@
             android:id="@+id/recall_old_flags"
             android:title="@string/old_flags"
             android:icon="@android:drawable/ic_menu_revert"/>
+        <item
+            android:id="@+id/about_app"
+            android:title="@string/about_app"
+            android:icon="@android:drawable/ic_menu_directions"/>
     </group>
 </menu>

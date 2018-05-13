@@ -29,7 +29,7 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         HasSupportFragmentInjector {
 
-    ActionBarDrawerToggle mDrawerToggle;
+    private ActionBarDrawerToggle mDrawerToggle;
 
     @Inject
     DispatchingAndroidInjector<Fragment> fragmentDispatchingAndroidInjector;
@@ -52,7 +52,6 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout mDrawerLayout = findViewById(R.id.drawer_layout);
         mDrawerToggle = new ActionBarDrawerToggle(this,
                 mDrawerLayout, toolbar, R.string.open_drawer, R.string.close_drawer) {
-
             @Override
             public void onDrawerSlide(final View drawerView, final float slideOffset) {
                 super.onDrawerSlide(drawerView, slideOffset);
@@ -86,19 +85,12 @@ public class MainActivity extends AppCompatActivity
         mDrawerLayout.addDrawerListener(mDrawerToggle);
 
         navigationView.setNavigationItemSelectedListener(this);
-        navigationView.setCheckedItem(R.id.new_game);
+        navigationView.setCheckedItem(R.id.home_page);
 
-        GameFragment gameFragment = (GameFragment) getSupportFragmentManager().findFragmentById(R.id.main_content);
-        if (gameFragment == null) {
-            gameFragment = new GameFragment();
-            getSupportFragmentManager().beginTransaction().add(R.id.main_content, gameFragment).commit();
+        if (getSupportFragmentManager().findFragmentById(R.id.main_content) == null) {
+            getSupportFragmentManager().beginTransaction().add(R.id.main_content, new HomeFragment()).commit();
         }
 
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
     }
 
     @Override
@@ -119,6 +111,32 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.home_page:
+                if (!(getSupportFragmentManager().findFragmentById(R.id.main_content) instanceof HomeFragment)) {
+                    getSupportFragmentManager().beginTransaction().replace(R.id.main_content, new HomeFragment()).commit();
+                }
+                break;
+            case R.id.new_game:
+                if (!(getSupportFragmentManager().findFragmentById(R.id.main_content) instanceof GameFragment)) {
+                    getSupportFragmentManager().beginTransaction().replace(R.id.main_content, new GameFragment()).commit();
+                }
+                break;
+            case R.id.recall_old_flags:
+                if (!(getSupportFragmentManager().findFragmentById(R.id.main_content) instanceof RecapFragment)) {
+                    getSupportFragmentManager().beginTransaction().replace(R.id.main_content, new RecapFragment()).commit();
+                }
+                break;
+            case R.id.about_app:
+                if (!(getSupportFragmentManager().findFragmentById(R.id.main_content) instanceof AboutFragment)) {
+                    getSupportFragmentManager().beginTransaction().replace(R.id.main_content, new AboutFragment()).commit();
+                }
+                break;
+        }
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        }
         return true;
     }
 

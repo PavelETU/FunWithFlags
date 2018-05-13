@@ -46,7 +46,7 @@ public class GameViewModelTest {
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
-        GameEntity currentGameEntity = new GameEntity("http://www.countryflags.io/de/shiny/64.png",
+        GameEntity currentGameEntity = new GameEntity(R.drawable.ru,
                 new ArrayList<>(Arrays.asList("Russia", "USA", "Thailand", "Germany")), 3);
         MutableLiveData<GameEntity> result = new MutableLiveData<>();
         result.setValue(currentGameEntity);

@@ -62,9 +62,7 @@ public class UITests {
         countriesNames.add("Netherlands");
         countriesNames.add("Poland");
         countriesNames.add("Dominican Republic");
-        fakeGameEntity.postValue(new GameEntity(
-                "https://10206-presscdn-0-16-pagely.netdna-ssl.com/wp-content/uploads/2016/04/Dollarphotoclub_netherlands-1920x1280.jpg",
-                countriesNames, 2));
+        fakeGameEntity.postValue(new GameEntity(R.drawable.germany, countriesNames, 2));
         onView(withId(R.id.button)).check(matches(withText(countriesNames.get(0))));
         onView(withId(R.id.button2)).check(matches(withText(countriesNames.get(1))));
         onView(withId(R.id.button3)).check(matches(withText(countriesNames.get(2))));
@@ -78,17 +76,13 @@ public class UITests {
         countriesNames.add("Netherlands");
         countriesNames.add("Poland");
         countriesNames.add("Dominican Republic");
-        fakeGameEntity.postValue(new GameEntity(
-                "https://10206-presscdn-0-16-pagely.netdna-ssl.com/wp-content/uploads/2016/04/Dollarphotoclub_netherlands-1920x1280.jpg",
-                countriesNames, 2));
+        fakeGameEntity.postValue(new GameEntity(R.drawable.us, countriesNames, 2));
         countriesNames.clear();
         countriesNames.add("Ireland");
         countriesNames.add("Cyprus");
         countriesNames.add("Mexico");
         countriesNames.add("Cuba");
-        fakeGameEntity.postValue(new GameEntity(
-                "http://52.24.98.51/wp-content/uploads/2018/02/mexico-city.jpg",
-                countriesNames, 2));
+        fakeGameEntity.postValue(new GameEntity(R.drawable.thailand, countriesNames, 2));
         onView(withId(R.id.button)).check(matches(withText(countriesNames.get(0))));
         onView(withId(R.id.button2)).check(matches(withText(countriesNames.get(1))));
         onView(withId(R.id.button3)).check(matches(withText(countriesNames.get(2))));
