@@ -1,7 +1,6 @@
 package com.wordpress.lonelytripblog.funwithflags.util
 
 import android.os.CountDownTimer
-import com.wordpress.lonelytripblog.funwithflags.data.CallbackForTimer
 
 open class Counter: CountDownTimer(1500, 1500) {
 

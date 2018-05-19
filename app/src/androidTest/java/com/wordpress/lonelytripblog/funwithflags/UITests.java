@@ -34,14 +34,14 @@ public class UITests {
 
     @Rule
     public ActivityTestRule<ActivityToTestFragments> activityTestRule =
-            new ActivityTestRule<>(ActivityToTestFragments.class);
+            new ActivityTestRule<>(ActivityToTestFragments.class, true, true);
 
-    MutableLiveData<GameEntity> fakeGameEntity = new MutableLiveData<>();
-    GameViewModel fakeViewModel;
+    private MutableLiveData<GameEntity> fakeGameEntity = new MutableLiveData<>();
+    private GameViewModel fakeViewModel;
 
     @Before
     public void init() {
-        GameFragment gameFragment = new GameFragment();
+        final GameFragment gameFragment = new GameFragment();
         fakeViewModel = mock(GameViewModel.class);
         when(fakeViewModel.getGameEntity()).thenReturn(fakeGameEntity);
         gameFragment.viewModelFactory = new ViewModelProvider.Factory() {

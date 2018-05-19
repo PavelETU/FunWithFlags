@@ -5,7 +5,6 @@ import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProvider;
 import android.databinding.BindingAdapter;
 import android.databinding.ObservableArrayList;
-import android.databinding.ObservableBoolean;
 import android.databinding.ObservableList;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.TransitionDrawable;
@@ -17,7 +16,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 
 import com.wordpress.lonelytripblog.funwithflags.R;
-import com.wordpress.lonelytripblog.funwithflags.data.CallbackForTimer;
+import com.wordpress.lonelytripblog.funwithflags.util.CallbackForTimer;
 import com.wordpress.lonelytripblog.funwithflags.data.GameEntity;
 import com.wordpress.lonelytripblog.funwithflags.data.GameRepo;
 import com.wordpress.lonelytripblog.funwithflags.util.Counter;

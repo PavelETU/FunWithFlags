@@ -3,7 +3,7 @@ package com.wordpress.lonelytripblog.funwithflags;
 import android.arch.core.executor.testing.InstantTaskExecutorRule;
 import android.arch.lifecycle.MutableLiveData;
 
-import com.wordpress.lonelytripblog.funwithflags.data.CallbackForTimer;
+import com.wordpress.lonelytripblog.funwithflags.util.CallbackForTimer;
 import com.wordpress.lonelytripblog.funwithflags.data.GameEntity;
 import com.wordpress.lonelytripblog.funwithflags.data.GameRepo;
 import com.wordpress.lonelytripblog.funwithflags.util.Counter;
@@ -64,7 +64,7 @@ public class GameViewModelTest {
                 viewModel.animateThisItemAsChosen.get(currentAnswer));
         // Confirm
         viewModel.getAnswerByUser(currentAnswer);
-        assertTrue("After confirm answer should be displayed", viewModel.showRightAnswer.get());
+        assertTrue("After confirm answer should be displayed", viewModel.showAsRightAnswer.get(0));
     }
 
     @Test
@@ -78,7 +78,7 @@ public class GameViewModelTest {
         assertFalse(viewModel.animateThisItemAsChosen.get(1));
         assertFalse(viewModel.animateThisItemAsChosen.get(2));
         assertTrue(viewModel.animateThisItemAsChosen.get(3));
-        assertFalse(viewModel.showRightAnswer.get());
+        assertFalse(viewModel.showAsRightAnswer.get(3));
     }
 
     @Test
@@ -90,9 +90,9 @@ public class GameViewModelTest {
         viewModel.getAnswerByUser(1);
         viewModel.getAnswerByUser(2);
         viewModel.getAnswerByUser(1);
-        assertFalse(viewModel.showRightAnswer.get());
+        assertFalse(viewModel.showAsRightAnswer.get(3));
         viewModel.getAnswerByUser(1);
-        assertTrue(viewModel.showRightAnswer.get());
+        assertTrue(viewModel.showAsRightAnswer.get(3));
         assertFalse(viewModel.animateThisItemAsChosen.get(0));
         assertFalse(viewModel.animateThisItemAsChosen.get(2));
         assertFalse(viewModel.animateThisItemAsChosen.get(3));
@@ -109,7 +109,7 @@ public class GameViewModelTest {
         }).when(counter).startCounter(any(CallbackForTimer.class));
         viewModel.getAnswerByUser(0);
         viewModel.getAnswerByUser(0);
-        verify(gameRepo, times(1)).requestNewFlags();
+        verify(gameRepo, times(1)).nextFlag();
     }
 
 }

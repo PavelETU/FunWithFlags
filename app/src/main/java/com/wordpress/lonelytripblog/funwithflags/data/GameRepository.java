@@ -102,6 +102,11 @@ public class GameRepository implements GameRepo {
     }
 
     @Override
+    public LiveData<Integer> getAmountOfLeftFlags() {
+        return null;
+    }
+
+    @Override
     public LiveData<GameEntity> getLearntFlag() {
         return null;
     }
@@ -109,5 +114,10 @@ public class GameRepository implements GameRepo {
     @Override
     public void nextLearntFlag() {
 
+    }
+
+    @Override
+    public LiveData<Integer> getAmountOfLearntFlags() {
+        return null;
     }
 }

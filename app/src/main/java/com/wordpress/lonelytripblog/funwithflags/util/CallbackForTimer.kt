@@ -1,4 +1,4 @@
-package com.wordpress.lonelytripblog.funwithflags.data
+package com.wordpress.lonelytripblog.funwithflags.util
 
 interface CallbackForTimer {
     fun doOnTimerStop()
