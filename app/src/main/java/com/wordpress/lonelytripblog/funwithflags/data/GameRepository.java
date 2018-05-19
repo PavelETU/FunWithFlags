@@ -4,12 +4,11 @@ import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 
 import com.wordpress.lonelytripblog.funwithflags.R;
+import com.wordpress.lonelytripblog.funwithflags.data.db.CountriesDB;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Random;
-import java.util.concurrent.ThreadLocalRandom;
 
 import javax.inject.Singleton;
 
@@ -20,6 +19,7 @@ import javax.inject.Singleton;
 @Singleton
 public class GameRepository implements GameRepo {
 
+    private CountriesDB db;
     private MutableLiveData<GameEntity> result;
     private List<String> countries = new ArrayList<>(Arrays.asList("Russia", "USA", "Thailand",
             "Germany", "Canada", "Bangladesh", "Costa Rica", "Mexico", "Morocco", "Norway",
@@ -52,9 +52,10 @@ public class GameRepository implements GameRepo {
 
     ));
 
-    public GameRepository() {
+    public GameRepository(CountriesDB db) {
+        this.db = db;
         result = new MutableLiveData<>();
-        result.setValue(gameEntities.remove((int)(Math.random() * gameEntities.size())));
+        result.setValue(gameEntities.remove((int) (Math.random() * gameEntities.size())));
     }
 
     @Override
@@ -93,7 +94,7 @@ public class GameRepository implements GameRepo {
 
             ));
         }
-        result.setValue(gameEntities.remove((int)(Math.random() * gameEntities.size())));
+        result.setValue(gameEntities.remove((int) (Math.random() * gameEntities.size())));
     }
 
     @Override

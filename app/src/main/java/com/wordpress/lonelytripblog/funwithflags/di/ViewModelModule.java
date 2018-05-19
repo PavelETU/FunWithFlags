@@ -1,10 +1,13 @@
 package com.wordpress.lonelytripblog.funwithflags.di;
 
 import android.arch.lifecycle.ViewModelProvider;
+import android.arch.persistence.room.Room;
+import android.content.Context;
 import android.support.annotation.NonNull;
 
 import com.wordpress.lonelytripblog.funwithflags.data.GameRepo;
 import com.wordpress.lonelytripblog.funwithflags.data.GameRepository;
+import com.wordpress.lonelytripblog.funwithflags.data.db.CountriesDB;
 import com.wordpress.lonelytripblog.funwithflags.util.Counter;
 import com.wordpress.lonelytripblog.funwithflags.viewmodels.GameViewModel.GameViewModelFactory;
 
@@ -20,24 +23,42 @@ import dagger.Provides;
 @Module
 public class ViewModelModule {
 
-    @Provides
-    @NonNull
-    @Singleton
-    static GameRepo gameRepo() {
-        return new GameRepository();
+    private Context appContext;
+
+    public ViewModelModule(@NonNull Context appContext) {
+        this.appContext = appContext;
     }
 
     @Provides
     @NonNull
     @Singleton
-    static Counter getCounter() {
+    GameRepo gameRepo(CountriesDB db) {
+        return new GameRepository(db);
+    }
+
+    @Provides
+    @NonNull
+    @Singleton
+    CountriesDB getCountriesDB(Context appContext) {
+        return Room.databaseBuilder(appContext, CountriesDB.class, "countries.db").build();
+    }
+
+    @Provides
+    @NonNull
+    @Singleton
+    Context getAppContext() { return appContext; }
+
+    @Provides
+    @NonNull
+    @Singleton
+    Counter getCounter() {
         return new Counter();
     }
 
     @Provides
     @NonNull
     @Singleton
-    static ViewModelProvider.Factory provideViewModelFactory(GameRepo gameRepo, Counter counter) {
+    ViewModelProvider.Factory provideViewModelFactory(GameRepo gameRepo, Counter counter) {
         return new GameViewModelFactory(gameRepo, counter);
     }
 

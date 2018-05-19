@@ -11,10 +11,10 @@ import android.support.v4.app.FragmentManager;
 import com.wordpress.lonelytripblog.funwithflags.di.AppMainComponent;
 import com.wordpress.lonelytripblog.funwithflags.di.DaggerAppMainComponent;
 import com.wordpress.lonelytripblog.funwithflags.di.InjectableFragment;
+import com.wordpress.lonelytripblog.funwithflags.di.ViewModelModule;
 import com.wordpress.lonelytripblog.funwithflags.ui.MainActivity;
 
 import dagger.android.support.AndroidSupportInjection;
-import dagger.android.support.HasSupportFragmentInjector;
 
 /**
  * Created by Павел on 09.03.2018.
@@ -33,7 +33,8 @@ public class FunWithFlagApp extends Application {
             public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
                 if (activity instanceof MainActivity) {
                     if (appMainComponent == null) {
-                        appMainComponent = DaggerAppMainComponent.create();
+                        appMainComponent = DaggerAppMainComponent.builder().viewModelModule(
+                                new ViewModelModule(getApplicationContext())).build();
                     }
                     appMainComponent.injectToActivityWithGame((MainActivity) activity);
                 }

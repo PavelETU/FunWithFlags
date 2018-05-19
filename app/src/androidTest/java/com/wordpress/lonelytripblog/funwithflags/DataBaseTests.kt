@@ -38,6 +38,7 @@ class DataBaseTests {
         val countriesList = listOf(Country(1, "Russia", R.drawable.ru, "Bla bla"),
                 Country(2, "Germany", R.drawable.germany, "Bla bla", 1))
         db.countryDao().insertCountries(countriesList)
+
         val returnedCountry = getValueOfLiveData(db.countryDao().getRandomCountryToLearn())
         assertEquals(returnedCountry, countriesList[0])
         val returnedLearntCountry = getValueOfLiveData(db.countryDao().getLearntCountries())
@@ -53,10 +54,29 @@ class DataBaseTests {
                 Country(4, "Costa Rico", R.drawable.costarica, "Bla bla", 1)
         )
         db.countryDao().insertCountries(countriesList)
+
         val countries = getValueOfLiveData(db.countryDao().getRandomCountriesOtherThanChosen(countriesList[3].id))
         assertThat(countries.size, `is`(3))
         assertTrue(countries.containsAll(arrayListOf(countriesList[0].name, countriesList[1].name,
                 countriesList[2].name)))
+    }
+
+    @Test
+    fun verifyAmountsOfRecords() {
+        val countriesList = listOf(Country(1, "Russia", R.drawable.ru, "Bla bla"),
+                Country(2, "Germany", R.drawable.germany, "Bla bla", 1),
+                Country(3, "Mexico", R.drawable.mexico, "Bla bla", 0),
+                Country(4, "Costa Rico", R.drawable.costarica, "Bla bla", 1),
+                Country(5, "Thailand", R.drawable.thailand, "Bla bla", 1),
+                Country(6, "Panama", R.drawable.panama, "Bla bla"),
+                Country(7, "South Africa", R.drawable.southafrica, "Bla bla", 1)
+        )
+        db.countryDao().insertCountries(countriesList)
+
+        var countriesCount = getValueOfLiveData(db.countryDao().getCountForType(0))
+        assertThat(countriesCount, `is`(3))
+        countriesCount = getValueOfLiveData(db.countryDao().getCountForType(1))
+        assertThat(countriesCount, `is`(4))
     }
 
     private fun <T> getValueOfLiveData(liveData: LiveData<T>): T {
@@ -71,7 +91,6 @@ class DataBaseTests {
         }
         liveData.observeForever(observer)
         latch.await(2, TimeUnit.SECONDS)
-
         return data[0] as T
     }
 
