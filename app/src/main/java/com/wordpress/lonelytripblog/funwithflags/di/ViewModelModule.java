@@ -1,7 +1,6 @@
 package com.wordpress.lonelytripblog.funwithflags.di;
 
 import android.arch.lifecycle.ViewModelProvider;
-import android.arch.persistence.room.Room;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
@@ -40,13 +39,15 @@ public class ViewModelModule {
     @NonNull
     @Singleton
     CountriesDB getCountriesDB(Context appContext) {
-        return Room.databaseBuilder(appContext, CountriesDB.class, "countries.db").build();
+        return CountriesDB.Companion.getInstance(appContext);
     }
 
     @Provides
     @NonNull
     @Singleton
-    Context getAppContext() { return appContext; }
+    Context getAppContext() {
+        return appContext;
+    }
 
     @Provides
     @NonNull

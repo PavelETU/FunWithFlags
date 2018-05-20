@@ -18,7 +18,7 @@ interface CountryDao {
     @Query("SELECT * FROM country WHERE flagIsLearnt=0 ORDER BY RANDOM() LIMIT 1")
     fun getRandomCountryToLearn(): LiveData<Country>
 
-    @Query("SELECT * FROM country WHERE flagIsLearnt=1 ORDER BY RANDOM() LIMIT 1")
+    @Query("SELECT * FROM country WHERE flagIsLearnt=1 ORDER BY RANDOM()")
     fun getLearntCountries(): LiveData<List<Country>>
 
     @Query("SELECT name FROM country WHERE id != :chosenCountryId ORDER BY RANDOM() LIMIT 3")
