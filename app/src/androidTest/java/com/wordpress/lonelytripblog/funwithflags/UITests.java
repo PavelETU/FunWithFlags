@@ -8,6 +8,7 @@ import android.support.test.runner.AndroidJUnit4;
 
 import com.wordpress.lonelytripblog.funwithflags.data.GameEntity;
 import com.wordpress.lonelytripblog.funwithflags.ui.GameFragment;
+import com.wordpress.lonelytripblog.funwithflags.util.NavigationController;
 import com.wordpress.lonelytripblog.funwithflags.viewmodels.GameViewModel;
 
 import org.junit.Before;
@@ -23,6 +24,7 @@ import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 /**
@@ -38,6 +40,7 @@ public class UITests {
 
     private MutableLiveData<GameEntity> fakeGameEntity = new MutableLiveData<>();
     private GameViewModel fakeViewModel;
+    private NavigationController navigationController;
 
     @Before
     public void init() {
@@ -52,17 +55,37 @@ public class UITests {
                 return fakeViewModel;
             }
         };
+        navigationController = mock(NavigationController.class);
+        gameFragment.navigationController = navigationController;
         activityTestRule.getActivity().setFragment(gameFragment);
     }
 
     @Test
-    public void verifyThatTitlesCorrespondsToData() {
+    public void whenViewModelReturnsNullVerifyNavigationToInfoFragment() {
+        fakeGameEntity.postValue(null);
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        verify(navigationController).navigateToGameInformationFragment(true);
+    }
+
+    @Test
+    public void verifyThatDataCorrectlySet() {
         List<String> countriesNames = new ArrayList<>();
         countriesNames.add("China");
         countriesNames.add("Netherlands");
         countriesNames.add("Poland");
         countriesNames.add("Dominican Republic");
-        fakeGameEntity.postValue(new GameEntity(R.drawable.germany, countriesNames, 2));
+        fakeGameEntity.postValue(new GameEntity(R.drawable.germany, countriesNames, 0));
+        // TODO refactor to countDownLatch
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        verify(fakeViewModel).setRightAnswer(0);
         onView(withId(R.id.button)).check(matches(withText(countriesNames.get(0))));
         onView(withId(R.id.button2)).check(matches(withText(countriesNames.get(1))));
         onView(withId(R.id.button3)).check(matches(withText(countriesNames.get(2))));
@@ -70,19 +93,33 @@ public class UITests {
     }
 
     @Test
-    public void verifyThatTitlesIsChangedAfterDataIsChanged() {
+    public void verifyThatDataCorrectlySetChanges() {
         List<String> countriesNames = new ArrayList<>();
         countriesNames.add("China");
         countriesNames.add("Netherlands");
         countriesNames.add("Poland");
         countriesNames.add("Dominican Republic");
         fakeGameEntity.postValue(new GameEntity(R.drawable.us, countriesNames, 2));
+        // TODO refactor to countDownLatch
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        verify(fakeViewModel).setRightAnswer(2);
         countriesNames.clear();
         countriesNames.add("Ireland");
         countriesNames.add("Cyprus");
         countriesNames.add("Mexico");
         countriesNames.add("Cuba");
-        fakeGameEntity.postValue(new GameEntity(R.drawable.thailand, countriesNames, 2));
+        fakeGameEntity.postValue(new GameEntity(R.drawable.thailand, countriesNames, 3));
+        // TODO refactor to countDownLatch
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        verify(fakeViewModel).setRightAnswer(3);
         onView(withId(R.id.button)).check(matches(withText(countriesNames.get(0))));
         onView(withId(R.id.button2)).check(matches(withText(countriesNames.get(1))));
         onView(withId(R.id.button3)).check(matches(withText(countriesNames.get(2))));

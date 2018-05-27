@@ -10,6 +10,9 @@ import com.wordpress.lonelytripblog.funwithflags.data.db.CountriesDB;
 import com.wordpress.lonelytripblog.funwithflags.util.Counter;
 import com.wordpress.lonelytripblog.funwithflags.viewmodels.GameViewModel.GameViewModelFactory;
 
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
+
 import javax.inject.Singleton;
 
 import dagger.Module;
@@ -31,8 +34,15 @@ public class ViewModelModule {
     @Provides
     @NonNull
     @Singleton
-    GameRepo gameRepo(CountriesDB db) {
-        return new GameRepository(db);
+    GameRepo gameRepo(CountriesDB db, Executor backgroundExecutor) {
+        return new GameRepository(db, backgroundExecutor);
+    }
+
+    @Provides
+    @NonNull
+    @Singleton
+    Executor getBackgroundExecutor() {
+        return Executors.newSingleThreadExecutor();
     }
 
     @Provides

@@ -1,5 +1,6 @@
 package com.wordpress.lonelytripblog.funwithflags.ui;
 
+import android.arch.lifecycle.ViewModelProvider;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -10,8 +11,17 @@ import android.view.ViewGroup;
 
 import com.wordpress.lonelytripblog.funwithflags.R;
 import com.wordpress.lonelytripblog.funwithflags.di.InjectableFragment;
+import com.wordpress.lonelytripblog.funwithflags.util.NavigationController;
+
+import javax.inject.Inject;
 
 public class RecapFragment extends Fragment implements InjectableFragment {
+
+    @Inject
+    NavigationController navigationController;
+
+    @Inject
+    public ViewModelProvider.Factory viewModelFactory;
 
     @Nullable
     @Override

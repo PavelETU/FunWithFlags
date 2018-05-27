@@ -2,6 +2,8 @@ package com.wordpress.lonelytripblog.funwithflags.data;
 
 import android.arch.lifecycle.LiveData;
 
+import com.wordpress.lonelytripblog.funwithflags.data.db.Country;
+
 /**
  * Created by Павел on 09.03.2018.
  */
@@ -11,7 +13,7 @@ public interface GameRepo {
     void nextFlag();
     void saveCurrentFlagIntoLearntFlags();
     LiveData<Integer> getAmountOfLeftFlags();
-    LiveData<GameEntity> getLearntFlag();
+    LiveData<Country> getLearntFlag();
     void nextLearntFlag();
     LiveData<Integer> getAmountOfLearntFlags();
 }

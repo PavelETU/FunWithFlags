@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 
 import com.wordpress.lonelytripblog.funwithflags.databinding.GameFragBinding;
 import com.wordpress.lonelytripblog.funwithflags.di.InjectableFragment;
+import com.wordpress.lonelytripblog.funwithflags.util.NavigationController;
 import com.wordpress.lonelytripblog.funwithflags.viewmodels.GameViewModel;
 
 import javax.inject.Inject;
@@ -28,6 +29,8 @@ public class GameFragment extends Fragment implements InjectableFragment {
     @Inject
     public ViewModelProvider.Factory viewModelFactory;
 
+    @Inject
+    public NavigationController navigationController;
 
     public GameFragment() {
         // Required empty public constructor
@@ -50,6 +53,8 @@ public class GameFragment extends Fragment implements InjectableFragment {
                 mGameFragBinding.setCountriesList(result.getCountries());
                 mGameFragBinding.setCountryImageResource(result.getCountryImageUrl());
                 viewModel.setRightAnswer(result.getRightAnswer());
+            } else {
+                navigationController.navigateToGameInformationFragment(true);
             }
         });
     }

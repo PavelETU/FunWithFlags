@@ -9,8 +9,15 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.wordpress.lonelytripblog.funwithflags.R;
+import com.wordpress.lonelytripblog.funwithflags.di.InjectableFragment;
+import com.wordpress.lonelytripblog.funwithflags.util.NavigationController;
 
-public class HomeFragment extends Fragment {
+import javax.inject.Inject;
+
+public class HomeFragment extends Fragment implements InjectableFragment {
+
+    @Inject
+    NavigationController navigationController;
 
     public HomeFragment() {
     }
@@ -18,7 +25,10 @@ public class HomeFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_home, container, false);
+        View view = inflater.inflate(R.layout.fragment_home, container, false);
+        view.findViewById(R.id.start_game_btn).setOnClickListener(
+                v -> navigationController.navigateToGame());
+        return view;
     }
 
 }

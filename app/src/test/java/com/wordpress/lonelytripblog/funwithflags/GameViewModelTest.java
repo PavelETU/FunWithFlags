@@ -42,16 +42,18 @@ public class GameViewModelTest {
     @Mock
     private Counter counter;
     private GameViewModel viewModel;
+    private MutableLiveData<GameEntity> gameEntityLiveData;
 
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
-        GameEntity currentGameEntity = new GameEntity(R.drawable.ru,
+        GameEntity currentGameEntity = new GameEntity(R.drawable.germany,
                 new ArrayList<>(Arrays.asList("Russia", "USA", "Thailand", "Germany")), 3);
-        MutableLiveData<GameEntity> result = new MutableLiveData<>();
-        result.setValue(currentGameEntity);
-        when(gameRepo.getLiveDataForGame()).then(invocation -> result);
+        gameEntityLiveData = new MutableLiveData<>();
+        gameEntityLiveData.setValue(currentGameEntity);
+        when(gameRepo.getLiveDataForGame()).then(invocation -> gameEntityLiveData);
         viewModel = new GameViewModel(gameRepo, counter);
+        viewModel.setRightAnswer(3);
     }
 
     @Test
@@ -64,7 +66,7 @@ public class GameViewModelTest {
                 viewModel.animateThisItemAsChosen.get(currentAnswer));
         // Confirm
         viewModel.getAnswerByUser(currentAnswer);
-        assertTrue("After confirm answer should be displayed", viewModel.showAsRightAnswer.get(0));
+        assertTrue("After confirm answer should be displayed", viewModel.showAsRightAnswer.get(3));
     }
 
     @Test
@@ -101,15 +103,32 @@ public class GameViewModelTest {
 
     @Test
     public void repoRequestedAfterQuestionIsAnswered() {
+        callCallbackForTimerRightAway();
+        viewModel.getAnswerByUser(0);
+        viewModel.getAnswerByUser(0);
+        verify(gameRepo, times(1)).nextFlag();
+    }
+
+    @Test
+    public void ifUserGetRightAnswerSaveFlagIsCalled() {
+        callCallbackForTimerRightAway();
+        // Confirm wrong answer
+        viewModel.getAnswerByUser(0);
+        viewModel.getAnswerByUser(0);
+        // Confirm right answer
+        viewModel.getAnswerByUser(3);
+        viewModel.getAnswerByUser(3);
+        
+        verify(gameRepo, times(1)).saveCurrentFlagIntoLearntFlags();
+    }
+
+    private void callCallbackForTimerRightAway() {
         // Call onTimerStop right after startCounter was called (disable animation)
         doAnswer((Answer<Void>) invocation -> {
             CallbackForTimer callback = invocation.getArgument(0);
             callback.doOnTimerStop();
             return null;
         }).when(counter).startCounter(any(CallbackForTimer.class));
-        viewModel.getAnswerByUser(0);
-        viewModel.getAnswerByUser(0);
-        verify(gameRepo, times(1)).nextFlag();
     }
 
 }

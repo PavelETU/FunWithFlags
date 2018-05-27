@@ -14,32 +14,43 @@ import com.wordpress.lonelytripblog.funwithflags.di.InjectableFragment;
 import com.wordpress.lonelytripblog.funwithflags.di.ViewModelModule;
 import com.wordpress.lonelytripblog.funwithflags.ui.MainActivity;
 
+import javax.inject.Inject;
+
+import dagger.android.AndroidInjection;
+import dagger.android.AndroidInjector;
+import dagger.android.DispatchingAndroidInjector;
+import dagger.android.HasActivityInjector;
 import dagger.android.support.AndroidSupportInjection;
 
 /**
  * Created by Павел on 09.03.2018.
  */
 
-public class FunWithFlagApp extends Application {
+public class FunWithFlagApp extends Application implements HasActivityInjector {
 
     private AppMainComponent appMainComponent;
+
+    @Inject
+    DispatchingAndroidInjector<Activity> dispatchingAndroidInjector;
 
 
     @Override
     public void onCreate() {
         super.onCreate();
+        if (appMainComponent == null) {
+            appMainComponent = DaggerAppMainComponent.builder().viewModelModule(
+                    new ViewModelModule(getApplicationContext())).build();
+        }
+        appMainComponent.injectApp(this);
         registerActivityLifecycleCallbacks(new ActivityLifecycleCallbacks() {
             @Override
             public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
                 if (activity instanceof MainActivity) {
-                    if (appMainComponent == null) {
-                        appMainComponent = DaggerAppMainComponent.builder().viewModelModule(
-                                new ViewModelModule(getApplicationContext())).build();
-                    }
-                    appMainComponent.injectToActivityWithGame((MainActivity) activity);
+                    AndroidInjection.inject(activity);
                 }
                 if (activity instanceof FragmentActivity) {
-                    ((FragmentActivity) activity).getSupportFragmentManager().registerFragmentLifecycleCallbacks(new FragmentManager.FragmentLifecycleCallbacks() {
+                    ((FragmentActivity) activity).getSupportFragmentManager()
+                            .registerFragmentLifecycleCallbacks(new FragmentManager.FragmentLifecycleCallbacks() {
                         @Override
                         public void onFragmentPreAttached(FragmentManager fm, Fragment f, Context context) {
                             if (f instanceof InjectableFragment) {
@@ -82,4 +93,8 @@ public class FunWithFlagApp extends Application {
         });
     }
 
+    @Override
+    public AndroidInjector<Activity> activityInjector() {
+        return dispatchingAndroidInjector;
+    }
 }

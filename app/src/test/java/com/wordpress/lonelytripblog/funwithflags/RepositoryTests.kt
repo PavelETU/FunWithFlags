@@ -17,7 +17,9 @@ import org.junit.runner.RunWith
 import org.junit.runners.JUnit4
 import org.mockito.ArgumentCaptor
 import org.mockito.ArgumentMatchers
+import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.*
+import java.util.concurrent.Executor
 
 @RunWith(JUnit4::class)
 class RepositoryTests {
@@ -33,23 +35,27 @@ class RepositoryTests {
     @Before
     fun setUp() {
         `when`(db.countryDao()).thenReturn(dao)
-        repository = GameRepository(db)
+        val fakeExecutor = mock(Executor::class.java)
+        doAnswer({ (it.arguments[0] as Runnable).run() }).`when`(fakeExecutor).execute(any())
+        repository = GameRepository(db, fakeExecutor)
+    }
+
+    @Test
+    fun verifySavingOfCurrentFlag() {
+        val rightCountry = Country(5, "Name of Country", 235, "bla bla")
+        prepopulateRepoWithData(rightCountry = rightCountry)
+
+        repository.saveCurrentFlagIntoLearntFlags()
+
+        verify(dao).updateCounty(Country(rightCountry.id, rightCountry.name, rightCountry.resourceId, rightCountry.description, 1))
     }
 
     @Test
     fun verifyRequestIsMadeProperly() {
-        val liveDataCountry = MutableLiveData<Country>()
-        val liveDataCountriesNames = MutableLiveData<List<String>>()
         val countries = arrayListOf("Some random country", "Another one", "And another one")
         val rightCountry = Country(5, "Name of Country", 235, "bla bla")
-
-        liveDataCountry.postValue(rightCountry)
-        liveDataCountriesNames.postValue(countries)
-        `when`(dao.getRandomCountryToLearn()).thenReturn(liveDataCountry)
-        `when`(dao.getRandomCountriesOtherThanChosen(ArgumentMatchers.anyInt())).thenReturn(liveDataCountriesNames)
-
         val observer = (mock(Observer::class.java) as Observer<GameEntity>)
-        repository.liveDataForGame.observeForever(observer)
+        prepopulateRepoWithData(countries, rightCountry, observer)
 
         verify(dao).getRandomCountryToLearn()
         verify(dao).getRandomCountriesOtherThanChosen(rightCountry.id)
@@ -61,6 +67,19 @@ class RepositoryTests {
         assertTrue(currentGameEntity.countries.containsAll(countries))
         assertTrue(currentGameEntity.countries.contains(rightCountry.name))
         assertThat(currentGameEntity.countries[currentGameEntity.rightAnswer], `is`(rightCountry.name))
+    }
+
+    private fun prepopulateRepoWithData(countries: ArrayList<String> = arrayListOf(
+            "Some random country", "Another one", "And another one"), rightCountry: Country,
+                                        observer: Observer<GameEntity> = (mock(Observer::class.java)
+                                                as Observer<GameEntity>)) {
+        val liveDataCountry = MutableLiveData<Country>()
+        val liveDataCountriesNames = MutableLiveData<List<String>>()
+        liveDataCountry.postValue(rightCountry)
+        liveDataCountriesNames.postValue(countries)
+        `when`(dao.getRandomCountryToLearn()).thenReturn(liveDataCountry)
+        `when`(dao.getRandomCountriesOtherThanChosen(ArgumentMatchers.anyInt())).thenReturn(liveDataCountriesNames)
+        repository.liveDataForGame.observeForever(observer)
     }
 
 }

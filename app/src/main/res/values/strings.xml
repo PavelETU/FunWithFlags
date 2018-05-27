@@ -5,11 +5,11 @@
     <string name="open_drawer">Opened drawer</string>
     <string name="close_drawer">Closed drawer</string>
     <string name="header_title">Fun With Flags!</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="image_description">Image with flag</string>
     <string name="title_activity_to_test_fragments">ActivityToTestFragments</string>
     <string name="home_page">Home</string>
     <string name="about_app">About app</string>
+    <string name="you_learnt_all">You learnt all flags! \nCongrats!</string>
+    <string name="you_learnt_not_all">You have not learnt all flags</string>
+    <string name="start_game">Start Game!</string>
 </resources>

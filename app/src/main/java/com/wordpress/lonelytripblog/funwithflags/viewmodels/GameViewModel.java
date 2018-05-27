@@ -63,7 +63,8 @@ public class GameViewModel extends ViewModel implements CallbackForTimer {
 
     // Workaround to not show buttons animation after rotation
     public void beforeRemoveObserver() {
-        if (showAsRightAnswer.get(0) || showAsRightAnswer.get(1) || showAsRightAnswer.get(2) || showAsRightAnswer.get(3)) {
+        if (showAsRightAnswer.get(0) || showAsRightAnswer.get(1) || showAsRightAnswer.get(2)
+                || showAsRightAnswer.get(3)) {
             // In case of different chosen and right answer two buttons were animated. Neglect other case for now
             amountOfButtonsAnimatedBeforeRotation = 2;
         } else if (lastChosenPosition != -1) {

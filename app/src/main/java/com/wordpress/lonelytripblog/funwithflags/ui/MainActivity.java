@@ -18,6 +18,7 @@ import android.view.ViewTreeObserver;
 import android.widget.LinearLayout;
 
 import com.wordpress.lonelytripblog.funwithflags.R;
+import com.wordpress.lonelytripblog.funwithflags.util.NavigationController;
 
 import javax.inject.Inject;
 
@@ -33,6 +34,9 @@ public class MainActivity extends AppCompatActivity
 
     @Inject
     DispatchingAndroidInjector<Fragment> fragmentDispatchingAndroidInjector;
+
+    @Inject
+    NavigationController navigationController;
 
     @Override
     public AndroidInjector<Fragment> supportFragmentInjector() {
@@ -111,28 +115,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.home_page:
-                if (!(getSupportFragmentManager().findFragmentById(R.id.main_content) instanceof HomeFragment)) {
-                    getSupportFragmentManager().beginTransaction().replace(R.id.main_content, new HomeFragment()).commit();
-                }
-                break;
-            case R.id.new_game:
-                if (!(getSupportFragmentManager().findFragmentById(R.id.main_content) instanceof GameFragment)) {
-                    getSupportFragmentManager().beginTransaction().replace(R.id.main_content, new GameFragment()).commit();
-                }
-                break;
-            case R.id.recall_old_flags:
-                if (!(getSupportFragmentManager().findFragmentById(R.id.main_content) instanceof RecapFragment)) {
-                    getSupportFragmentManager().beginTransaction().replace(R.id.main_content, new RecapFragment()).commit();
-                }
-                break;
-            case R.id.about_app:
-                if (!(getSupportFragmentManager().findFragmentById(R.id.main_content) instanceof AboutFragment)) {
-                    getSupportFragmentManager().beginTransaction().replace(R.id.main_content, new AboutFragment()).commit();
-                }
-                break;
-        }
+        navigationController.navigateToFragmentByMenuId(item.getItemId());
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
