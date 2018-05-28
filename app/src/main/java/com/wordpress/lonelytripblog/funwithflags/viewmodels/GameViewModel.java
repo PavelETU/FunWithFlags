@@ -1,6 +1,7 @@
 package com.wordpress.lonelytripblog.funwithflags.viewmodels;
 
 import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.MediatorLiveData;
 import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProvider;
 import android.databinding.BindingAdapter;
@@ -11,14 +12,16 @@ import android.graphics.drawable.TransitionDrawable;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
+import android.util.Pair;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 
 import com.wordpress.lonelytripblog.funwithflags.R;
-import com.wordpress.lonelytripblog.funwithflags.util.CallbackForTimer;
 import com.wordpress.lonelytripblog.funwithflags.data.GameEntity;
 import com.wordpress.lonelytripblog.funwithflags.data.GameRepo;
+import com.wordpress.lonelytripblog.funwithflags.data.db.Country;
+import com.wordpress.lonelytripblog.funwithflags.util.CallbackForTimer;
 import com.wordpress.lonelytripblog.funwithflags.util.Counter;
 
 import java.util.ArrayList;
@@ -83,7 +86,7 @@ public class GameViewModel extends ViewModel implements CallbackForTimer {
                 animateThisItemAsChosen.set(lastChosenPosition, false);
             }
             animateThisItemAsChosen.set(userAnswer, true);
-        // User confirms answer
+            // User confirms answer
         } else {
             if (userAnswer == rightAnswerPosition) {
                 gameRepository.saveCurrentFlagIntoLearntFlags();
@@ -164,6 +167,25 @@ public class GameViewModel extends ViewModel implements CallbackForTimer {
     public static void setImage(final ImageView view, final Integer imageUrl) {
         if (view == null || imageUrl == null) return;
         view.setImageResource(imageUrl);
+    }
+
+    public LiveData<Pair<Integer, Integer>> getAmountOfLearntAndLeftFlags() {
+        MediatorLiveData<Pair<Integer, Integer>> mediatorLiveData = new MediatorLiveData<>();
+        mediatorLiveData.addSource(gameRepository.getAmountOfLeftFlags(), leftFlags ->
+                mediatorLiveData.addSource(gameRepository.getAmountOfLearntFlags(), learntFlags -> {
+                    mediatorLiveData.postValue(new Pair<>(learntFlags, leftFlags));
+                    mediatorLiveData.removeSource(gameRepository.getAmountOfLeftFlags());
+                    mediatorLiveData.removeSource(gameRepository.getAmountOfLearntFlags());
+                }));
+        return mediatorLiveData;
+    }
+
+    public LiveData<Country> getLearntCountry() {
+        return gameRepository.getLearntFlag();
+    }
+
+    public void requestNewLearntFlag() {
+        gameRepository.nextLearntFlag();
     }
 
     public static class GameViewModelFactory implements ViewModelProvider.Factory {

@@ -12,4 +12,6 @@
     <string name="you_learnt_all">You learnt all flags! \nCongrats!</string>
     <string name="you_learnt_not_all">You have not learnt all flags</string>
     <string name="start_game">Start Game!</string>
+    <string name="continue_btn">Recap</string>
+    <string name="next_learnt_flag">Next</string>
 </resources>

@@ -20,9 +20,8 @@ class NavigationController @Inject constructor(mainActivity: MainActivity) {
             R.id.new_game -> if (fragmentManager.findFragmentById(containerId) !is GameFragment) {
                 navigateToGame()
             }
-            R.id.recall_old_flags -> if (fragmentManager.findFragmentById(containerId) !is RecapFragment) {
-                fragmentManager.beginTransaction().replace(containerId,
-                        RecapFragment()).commit()
+            R.id.recall_old_flags -> if (fragmentManager.findFragmentById(containerId) !is InfoFragment) {
+                fragmentManager.beginTransaction().replace(containerId, InfoFragment()).commit()
             }
             R.id.about_app -> if (fragmentManager.findFragmentById(containerId) !is AboutFragment) {
                 fragmentManager.beginTransaction().replace(containerId, AboutFragment()).commit()
@@ -34,12 +33,16 @@ class NavigationController @Inject constructor(mainActivity: MainActivity) {
         fragmentManager.beginTransaction().replace(containerId, GameFragment()).commit()
     }
 
-    fun navigateToGameInformationFragment(allFlagsLearnt: Boolean) {
+    fun navigateToGameInformationFragment(fromGameFragment: Boolean) {
         val infoFragment = InfoFragment()
         val bundle = Bundle()
-        bundle.putBoolean(ALL_FLAGS_LEARNT_FLAG, allFlagsLearnt)
+        bundle.putBoolean(ALL_FLAGS_LEARNT_FLAG, fromGameFragment)
         infoFragment.arguments = bundle
         fragmentManager.beginTransaction().replace(containerId, infoFragment).commit()
+    }
+
+    fun navigateToRecapFragment() {
+        fragmentManager.beginTransaction().replace(containerId, RecapFragment()).commit()
     }
 
 }
