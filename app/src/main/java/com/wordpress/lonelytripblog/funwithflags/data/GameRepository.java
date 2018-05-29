@@ -85,7 +85,7 @@ public class GameRepository implements GameRepo {
     @Override
     public LiveData<Country> getLearntFlag() {
         learntCountry = new MediatorLiveData<>();
-        if (learntCountries == null) {
+        if (learntCountries == null || learntCountries.isEmpty()) {
             learntCountry.addSource(db.countryDao().getLearntCountries(), countries -> {
                 learntCountries = countries;
                 postValueToLearntCountry();

@@ -27,7 +27,7 @@ public class HomeFragment extends Fragment implements InjectableFragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
         view.findViewById(R.id.start_game_btn).setOnClickListener(
-                v -> navigationController.navigateToGame());
+                v -> navigationController.getCallNewGameAsFromNavMenu().invoke());
         return view;
     }
 

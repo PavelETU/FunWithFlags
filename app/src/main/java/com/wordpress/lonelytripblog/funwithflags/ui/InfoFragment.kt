@@ -1,7 +1,6 @@
 package com.wordpress.lonelytripblog.funwithflags.ui
 
 
-import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
@@ -14,11 +13,11 @@ import com.wordpress.lonelytripblog.funwithflags.R
 import com.wordpress.lonelytripblog.funwithflags.di.InjectableFragment
 import com.wordpress.lonelytripblog.funwithflags.util.NavigationController
 import com.wordpress.lonelytripblog.funwithflags.viewmodels.GameViewModel
-import kotlinx.android.synthetic.main.fragment_info.*
 import kotlinx.android.synthetic.main.fragment_info.view.*
 import javax.inject.Inject
 
-const val ALL_FLAGS_LEARNT_FLAG = "all_flags_learnt"
+const val FROM_GAME_FRAGMENT = "from_game_fragment"
+const val AFTER_ALL_FLAGS_WERE_REVIEWED = "all_flags_were_reviewed"
 
 class InfoFragment : Fragment(), InjectableFragment {
 
@@ -32,16 +31,53 @@ class InfoFragment : Fragment(), InjectableFragment {
                               savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_info, container, false)
         val viewModel = ViewModelProviders.of(this, viewModelFactory).get(GameViewModel::class.java)
-        val forGameFragment = arguments?.getBoolean(ALL_FLAGS_LEARNT_FLAG) ?: false
-        viewModel.amountOfLearntAndLeftFlags.observe(this, Observer { it?.also {
-            view.flags_info.text = "You have learnt ${it.first} and you have left to learn ${it.second}"
-            viewModel.amountOfLearntAndLeftFlags.removeObservers(this)
-        }})
-        view.continue_btn.visibility =  if (forGameFragment) {
-            View.INVISIBLE
-        } else {
+        val calledFromGameFragment = arguments?.getBoolean(FROM_GAME_FRAGMENT) ?: false
+        val allFlagsWereReviewed = arguments?.getBoolean(AFTER_ALL_FLAGS_WERE_REVIEWED) ?: false
+        viewModel.amountOfLearntAndLeftFlags.observe(this, Observer {
+            it?.also {
+                if (calledFromGameFragment) {
+                    if (it.second == 0) {
+                        view.flags_info.text = getString(R.string.recap_flags_all_flags_learnt, it.first)
+                        view.continue_btn.setOnClickListener {
+                            navigationController.callRecapGameAsFromNavMenu.invoke()
+                        }
+                    } else {
+                        navigationController.navigateToNewGameFragment()
+                    }
+                } else if (allFlagsWereReviewed) {
+                    view.flags_info.text = getString(R.string.recap_flags_all_flags_reviewed, it.first)
+                    view.continue_btn.setOnClickListener {
+                        navigationController.navigateToRecapFragment()
+                    }
+                } else {
+                    when {
+                        it.second == 0 -> {
+                            view.flags_info.text = getString(R.string.recap_flags_all_flags_learnt, it.first)
+                            view.continue_btn.setOnClickListener {
+                                navigationController.navigateToRecapFragment()
+                            }
+                        }
+                        it.first == 0 -> {
+                            view.flags_info.text = getString(R.string.recap_flags_no_flags_learnt, it.second)
+                            view.continue_btn.text = getString(R.string.start_game)
+                            view.continue_btn.setOnClickListener {
+                                navigationController.callNewGameAsFromNavMenu.invoke()
+                            }
+                        }
+                        else -> {
+                            view.flags_info.text = getString(R.string.recap_flags_flags_partially_learnt,
+                                    it.first, it.first + it.second, it.second)
+                            view.continue_btn.setOnClickListener {
+                                navigationController.navigateToRecapFragment()
+                            }
+                        }
+                    }
+                }
+                viewModel.amountOfLearntAndLeftFlags.removeObservers(this)
+            }
+        })
+        if (!calledFromGameFragment) {
             view.continue_btn.setOnClickListener { navigationController.navigateToRecapFragment() }
-            View.VISIBLE
         }
         return view
     }

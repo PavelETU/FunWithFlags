@@ -4,6 +4,7 @@ import android.os.Bundle
 import com.wordpress.lonelytripblog.funwithflags.OpenForTesting
 import com.wordpress.lonelytripblog.funwithflags.R
 import com.wordpress.lonelytripblog.funwithflags.ui.*
+import kotlinx.android.synthetic.main.activity_main.*
 import javax.inject.Inject
 
 @OpenForTesting
@@ -11,38 +12,47 @@ class NavigationController @Inject constructor(mainActivity: MainActivity) {
 
     private val containerId = R.id.main_content
     private val fragmentManager = mainActivity.supportFragmentManager
+    val callNewGameAsFromNavMenu = {
+        mainActivity.navigation_container.setCheckedItem(R.id.new_game)
+        navigateToGameInformationFragment(true)
+    }
+    val callRecapGameAsFromNavMenu = {
+        mainActivity.navigation_container.setCheckedItem(R.id.recall_old_flags)
+        navigateToRecapFragment()
+    }
 
     fun navigateToFragmentByMenuId(itemId: Int) {
         when (itemId) {
             R.id.home_page -> if (fragmentManager.findFragmentById(containerId) !is HomeFragment) {
                 fragmentManager.beginTransaction().replace(containerId, HomeFragment()).commit()
             }
-            R.id.new_game -> if (fragmentManager.findFragmentById(containerId) !is GameFragment) {
-                navigateToGame()
-            }
-            R.id.recall_old_flags -> if (fragmentManager.findFragmentById(containerId) !is InfoFragment) {
-                fragmentManager.beginTransaction().replace(containerId, InfoFragment()).commit()
-            }
+            R.id.new_game -> navigateToGameInformationFragment(true)
+            R.id.recall_old_flags -> navigateToGameInformationFragment(false)
             R.id.about_app -> if (fragmentManager.findFragmentById(containerId) !is AboutFragment) {
                 fragmentManager.beginTransaction().replace(containerId, AboutFragment()).commit()
             }
         }
     }
 
-    fun navigateToGame() {
-        fragmentManager.beginTransaction().replace(containerId, GameFragment()).commit()
-    }
-
-    fun navigateToGameInformationFragment(fromGameFragment: Boolean) {
+    fun navigateToGameInformationFragment(fromGameFragment: Boolean, afterAllFlagsWereReview: Boolean = false) {
         val infoFragment = InfoFragment()
         val bundle = Bundle()
-        bundle.putBoolean(ALL_FLAGS_LEARNT_FLAG, fromGameFragment)
+        bundle.putBoolean(FROM_GAME_FRAGMENT, fromGameFragment)
+        bundle.putBoolean(AFTER_ALL_FLAGS_WERE_REVIEWED, afterAllFlagsWereReview)
         infoFragment.arguments = bundle
         fragmentManager.beginTransaction().replace(containerId, infoFragment).commit()
     }
 
+    fun navigateToNewGameFragment() {
+        fragmentManager.beginTransaction().replace(containerId, GameFragment()).commit()
+    }
+
     fun navigateToRecapFragment() {
         fragmentManager.beginTransaction().replace(containerId, RecapFragment()).commit()
+    }
+
+    fun navigateToInfoFragmentAfterAllFlagsWereReviewed() {
+        navigateToGameInformationFragment(false, true)
     }
 
 }

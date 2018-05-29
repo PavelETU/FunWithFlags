@@ -42,7 +42,7 @@ public class RecapFragment extends Fragment implements InjectableFragment {
         recapFragBinding.setGameViewModel(viewModel);
         viewModel.getLearntCountry().observe(this, country -> {
             if (country == null) {
-                navigationController.navigateToGameInformationFragment(false);
+                navigationController.navigateToInfoFragmentAfterAllFlagsWereReviewed();
             } else {
                 recapFragBinding.setCountry(country);
             }
