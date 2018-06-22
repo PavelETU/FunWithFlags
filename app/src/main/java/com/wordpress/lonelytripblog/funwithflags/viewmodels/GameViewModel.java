@@ -41,6 +41,8 @@ public class GameViewModel extends ViewModel implements CallbackForTimer {
     public final ObservableList<Boolean> showAsRightAnswer = new ObservableArrayList<>();
     private int lastChosenPosition = -1;
     private int rightAnswerPosition = -1;
+    private LiveData<GameEntity> gameEntityLiveData;
+    private LiveData<Country> learntCountry;
 
     private GameRepo gameRepository;
     private Counter counter;
@@ -61,7 +63,10 @@ public class GameViewModel extends ViewModel implements CallbackForTimer {
     }
 
     public LiveData<GameEntity> getGameEntity() {
-        return gameRepository.getLiveDataForGame();
+        if (gameEntityLiveData == null) {
+            gameEntityLiveData = gameRepository.getLiveDataForGame();
+        }
+        return gameEntityLiveData;
     }
 
     // Workaround to not show buttons animation after rotation
@@ -181,7 +186,10 @@ public class GameViewModel extends ViewModel implements CallbackForTimer {
     }
 
     public LiveData<Country> getLearntCountry() {
-        return gameRepository.getLearntFlag();
+        if (learntCountry == null) {
+            learntCountry = gameRepository.getLearntFlag();
+        }
+        return learntCountry;
     }
 
     public void requestNewLearntFlag() {
