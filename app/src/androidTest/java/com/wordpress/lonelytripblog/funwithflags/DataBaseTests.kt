@@ -1,31 +1,33 @@
 package com.wordpress.lonelytripblog.funwithflags
 
-import android.arch.lifecycle.LiveData
-import android.arch.lifecycle.Observer
-import android.arch.persistence.room.Room
-import android.support.test.InstrumentationRegistry
-import android.support.test.runner.AndroidJUnit4
+import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.Observer
+import androidx.room.Room
+import androidx.test.core.app.ApplicationProvider
 import com.wordpress.lonelytripblog.funwithflags.data.db.CountriesDB
 import com.wordpress.lonelytripblog.funwithflags.data.db.Country
 import org.hamcrest.CoreMatchers.`is`
 import org.junit.After
 import org.junit.Assert.*
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
-import org.junit.runner.RunWith
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
 
-@RunWith(AndroidJUnit4::class)
 class DataBaseTests {
 
+    @get:Rule
+    val instantTaskExecutorRule = InstantTaskExecutorRule()
     private lateinit var _db: CountriesDB
     private val db: CountriesDB
         get() = _db
 
     @Before
     fun createDB() {
-        _db = Room.inMemoryDatabaseBuilder(InstrumentationRegistry.getContext(), CountriesDB::class.java).build()
+        _db = Room.inMemoryDatabaseBuilder(ApplicationProvider.getApplicationContext(),
+                CountriesDB::class.java).build()
     }
 
     @After

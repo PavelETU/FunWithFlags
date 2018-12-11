@@ -2,11 +2,7 @@ package com.wordpress.lonelytripblog.funwithflags;
 
 import android.app.Application;
 import android.content.Context;
-import android.support.test.runner.AndroidJUnitRunner;
-
-/**
- * Created by Павел on 24.03.2018.
- */
+import androidx.test.runner.AndroidJUnitRunner;
 
 public class FunWithFlagsTestRunner extends AndroidJUnitRunner {
     @Override

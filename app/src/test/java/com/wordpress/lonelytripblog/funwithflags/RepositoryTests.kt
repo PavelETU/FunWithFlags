@@ -1,8 +1,8 @@
 package com.wordpress.lonelytripblog.funwithflags
 
-import android.arch.core.executor.testing.InstantTaskExecutorRule
-import android.arch.lifecycle.MutableLiveData
-import android.arch.lifecycle.Observer
+import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
 import com.wordpress.lonelytripblog.funwithflags.data.GameEntity
 import com.wordpress.lonelytripblog.funwithflags.data.GameRepository
 import com.wordpress.lonelytripblog.funwithflags.data.db.CountriesDB

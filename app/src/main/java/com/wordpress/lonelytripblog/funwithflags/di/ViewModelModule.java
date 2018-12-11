@@ -1,8 +1,8 @@
 package com.wordpress.lonelytripblog.funwithflags.di;
 
-import android.arch.lifecycle.ViewModelProvider;
+import androidx.lifecycle.ViewModelProvider;
 import android.content.Context;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.wordpress.lonelytripblog.funwithflags.data.GameRepo;
 import com.wordpress.lonelytripblog.funwithflags.data.GameRepository;

@@ -1,17 +1,17 @@
 package com.wordpress.lonelytripblog.funwithflags.viewmodels;
 
-import android.arch.lifecycle.LiveData;
-import android.arch.lifecycle.MediatorLiveData;
-import android.arch.lifecycle.ViewModel;
-import android.arch.lifecycle.ViewModelProvider;
-import android.databinding.BindingAdapter;
-import android.databinding.ObservableArrayList;
-import android.databinding.ObservableList;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MediatorLiveData;
+import androidx.lifecycle.ViewModel;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.databinding.BindingAdapter;
+import androidx.databinding.ObservableArrayList;
+import androidx.databinding.ObservableList;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.TransitionDrawable;
 import android.os.Build;
-import android.support.annotation.NonNull;
-import android.support.v4.content.ContextCompat;
+import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import android.util.Pair;
 import android.view.View;
 import android.widget.Button;

@@ -1,6 +1,6 @@
 package com.wordpress.lonelytripblog.funwithflags.data;
 
-import android.arch.lifecycle.LiveData;
+import androidx.lifecycle.LiveData;
 
 import com.wordpress.lonelytripblog.funwithflags.data.db.Country;
 
