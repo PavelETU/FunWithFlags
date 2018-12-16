@@ -10,9 +10,9 @@ android:
 
 before_install:
   - chmod +x gradlew
-  - echo y | sdkmanager "platforms;android-28"
   # include tools for avdmanager
   - sdkmanager tools
+  - echo y | sdkmanager "platforms;android-28"
 
 #Set up emulator
 before_script:
