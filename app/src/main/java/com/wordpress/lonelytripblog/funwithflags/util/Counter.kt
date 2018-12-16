@@ -1,10 +1,8 @@
 package com.wordpress.lonelytripblog.funwithflags.util
 
 import android.os.CountDownTimer
-import com.wordpress.lonelytripblog.funwithflags.OpenForTesting
 
-@OpenForTesting
-class Counter : CountDownTimer(1500, 1500) {
+open class Counter : CountDownTimer(1500, 1500) {
 
     private var callback: CallbackForTimer? = null
 
@@ -17,7 +15,7 @@ class Counter : CountDownTimer(1500, 1500) {
 
     }
 
-    fun startCounter(callback: CallbackForTimer) {
+    fun startCounter(callback: CallbackForTimer?) {
         this.callback = callback
         this.start()
     }

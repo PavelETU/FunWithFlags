@@ -1,19 +1,14 @@
 package com.wordpress.lonelytripblog.funwithflags;
 
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule;
-import androidx.lifecycle.MutableLiveData;
-
-import com.wordpress.lonelytripblog.funwithflags.util.CallbackForTimer;
 import com.wordpress.lonelytripblog.funwithflags.data.GameEntity;
 import com.wordpress.lonelytripblog.funwithflags.data.GameRepo;
+import com.wordpress.lonelytripblog.funwithflags.util.CallbackForTimer;
 import com.wordpress.lonelytripblog.funwithflags.util.Counter;
 import com.wordpress.lonelytripblog.funwithflags.viewmodels.GameViewModel;
 
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.stubbing.Answer;
@@ -21,18 +16,16 @@ import org.mockito.stubbing.Answer;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import androidx.arch.core.executor.testing.InstantTaskExecutorRule;
+import androidx.lifecycle.MutableLiveData;
+
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-/**
- * Created by Павел on 04.03.2018.
- */
-@RunWith(JUnit4.class)
 public class GameViewModelTest {
 
     @Rule
@@ -58,7 +51,6 @@ public class GameViewModelTest {
 
     @Test
     public void showRightAnswerAfterAnythingChosen() {
-        doAnswer((Answer<Void>) invocation -> null).when(counter).startCounter(any(CallbackForTimer.class));
         // Choose
         int currentAnswer = 0;
         viewModel.getAnswerByUser(currentAnswer);
@@ -85,7 +77,6 @@ public class GameViewModelTest {
 
     @Test
     public void madeMultipleChoicesAndGiveAnswer() {
-        doAnswer((Answer<Void>) invocation -> null).when(counter).startCounter(any(CallbackForTimer.class));
         // Choose
         viewModel.getAnswerByUser(0);
         viewModel.getAnswerByUser(3);
@@ -102,10 +93,16 @@ public class GameViewModelTest {
     }
 
     @Test
-    public void repoRequestedAfterQuestionIsAnswered() {
-        callCallbackForTimerRightAway();
+    public void timerStartAfterAnswerIsSet() {
         viewModel.getAnswerByUser(0);
         viewModel.getAnswerByUser(0);
+
+        verify(counter, times(1)).startCounter(viewModel);
+    }
+
+    @Test
+    public void repoRequestedOnTimerStop() {
+        viewModel.doOnTimerStop();
         verify(gameRepo, times(1)).nextFlag();
     }
 
@@ -118,17 +115,18 @@ public class GameViewModelTest {
         // Confirm right answer
         viewModel.getAnswerByUser(3);
         viewModel.getAnswerByUser(3);
-        
+
         verify(gameRepo, times(1)).saveCurrentFlagIntoLearntFlags();
     }
 
     private void callCallbackForTimerRightAway() {
         // Call onTimerStop right after startCounter was called (disable animation)
         doAnswer((Answer<Void>) invocation -> {
+            if (invocation.getArguments().length == 0) return null;
             CallbackForTimer callback = invocation.getArgument(0);
-            callback.doOnTimerStop();
+            viewModel.doOnTimerStop();
             return null;
-        }).when(counter).startCounter(any(CallbackForTimer.class));
+        }).when(counter).startCounter(viewModel);
     }
 
 }

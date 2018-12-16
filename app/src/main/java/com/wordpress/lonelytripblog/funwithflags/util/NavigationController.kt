@@ -1,14 +1,12 @@
 package com.wordpress.lonelytripblog.funwithflags.util
 
 import android.os.Bundle
-import com.wordpress.lonelytripblog.funwithflags.OpenForTesting
 import com.wordpress.lonelytripblog.funwithflags.R
 import com.wordpress.lonelytripblog.funwithflags.ui.*
 import kotlinx.android.synthetic.main.activity_main.*
 import javax.inject.Inject
 
-@OpenForTesting
-class NavigationController @Inject constructor(mainActivity: MainActivity) {
+open class NavigationController @Inject constructor(mainActivity: MainActivity) {
 
     private val containerId = R.id.main_content
     private val fragmentManager = mainActivity.supportFragmentManager
