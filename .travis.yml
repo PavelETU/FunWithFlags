@@ -10,7 +10,7 @@ android:
 
 before_install:
   - chmod +x gradlew
-  - yes | sdkmanager --licenses
+  - echo y | sdkmanager "build-tools;28.0.3"
   # include tools for avdmanager
   - sdkmanager tools
 
