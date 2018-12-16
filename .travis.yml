@@ -15,8 +15,8 @@ before_install:
   # include tools for avdmanager
   - sdkmanager tools
   # Install system image.
-  - sdkmanager "system-images;android-24;default;armeabi-v7a"
-  - echo no | avdmanager create avd -n test -k "system-images;android-24;default;armeabi-v7a"
+  - sdkmanager "system-images;android-19;default;armeabi-v7a"
+  - echo no | avdmanager create avd -n test -k "system-images;android-19;default;armeabi-v7a"
   - $ANDROID_HOME/emulator/emulator -avd test -no-audio -no-window &
 
 #Set up emulator
