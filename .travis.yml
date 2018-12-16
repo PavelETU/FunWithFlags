@@ -10,6 +10,8 @@ android:
 
 before_install:
   - chmod +x gradlew
+  # include tools for avdmanager
+  - sdkmanager tools
 
 #Set up emulator
 before_script:
