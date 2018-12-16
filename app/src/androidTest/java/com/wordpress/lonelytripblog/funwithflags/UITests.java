@@ -50,17 +50,6 @@ public class UITests {
     }
 
     @Test
-    public void whenViewModelReturnsNullVerifyNavigationToInfoFragment() {
-        fakeGameEntity.postValue(null);
-        try {
-            Thread.sleep(2000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        verify(navigationController).navigateToGameInformationFragment(true, false);
-    }
-
-    @Test
     public void verifyThatDataCorrectlySet() {
         List<String> countriesNames = new ArrayList<>();
         countriesNames.add("China");
