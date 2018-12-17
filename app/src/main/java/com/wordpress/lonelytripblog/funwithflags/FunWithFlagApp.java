@@ -4,27 +4,23 @@ import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 import android.os.Bundle;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
-import androidx.fragment.app.FragmentManager;
 
 import com.wordpress.lonelytripblog.funwithflags.di.AppMainComponent;
 import com.wordpress.lonelytripblog.funwithflags.di.DaggerAppMainComponent;
-import com.wordpress.lonelytripblog.funwithflags.di.InjectableFragment;
-import com.wordpress.lonelytripblog.funwithflags.di.ViewModelModule;
+import com.wordpress.lonelytripblog.funwithflags.di.FunWithFlagsModule;
+import com.wordpress.lonelytripblog.funwithflags.di.InjectMe;
 import com.wordpress.lonelytripblog.funwithflags.ui.MainActivity;
 
 import javax.inject.Inject;
 
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
 import dagger.android.AndroidInjection;
 import dagger.android.AndroidInjector;
 import dagger.android.DispatchingAndroidInjector;
 import dagger.android.HasActivityInjector;
 import dagger.android.support.AndroidSupportInjection;
-
-/**
- * Created by Павел on 09.03.2018.
- */
 
 public class FunWithFlagApp extends Application implements HasActivityInjector {
 
@@ -38,8 +34,8 @@ public class FunWithFlagApp extends Application implements HasActivityInjector {
     public void onCreate() {
         super.onCreate();
         if (appMainComponent == null) {
-            appMainComponent = DaggerAppMainComponent.builder().viewModelModule(
-                    new ViewModelModule(getApplicationContext())).build();
+            appMainComponent = DaggerAppMainComponent.builder().funWithFlagsModule(
+                    new FunWithFlagsModule(getApplicationContext())).build();
         }
         appMainComponent.injectApp(this);
         registerActivityLifecycleCallbacks(new ActivityLifecycleCallbacks() {
@@ -51,13 +47,13 @@ public class FunWithFlagApp extends Application implements HasActivityInjector {
                 if (activity instanceof FragmentActivity) {
                     ((FragmentActivity) activity).getSupportFragmentManager()
                             .registerFragmentLifecycleCallbacks(new FragmentManager.FragmentLifecycleCallbacks() {
-                        @Override
-                        public void onFragmentPreAttached(FragmentManager fm, Fragment f, Context context) {
-                            if (f instanceof InjectableFragment) {
-                                AndroidSupportInjection.inject(f);
-                            }
-                        }
-                    }, true);
+                                @Override
+                                public void onFragmentPreAttached(FragmentManager fm, Fragment f, Context context) {
+                                    if (f instanceof InjectMe) {
+                                        AndroidSupportInjection.inject(f);
+                                    }
+                                }
+                            }, true);
                 }
             }
 

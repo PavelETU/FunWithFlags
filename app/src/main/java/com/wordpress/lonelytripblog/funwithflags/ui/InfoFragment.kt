@@ -10,7 +10,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.wordpress.lonelytripblog.funwithflags.R
-import com.wordpress.lonelytripblog.funwithflags.di.InjectableFragment
+import com.wordpress.lonelytripblog.funwithflags.di.InjectMe
 import com.wordpress.lonelytripblog.funwithflags.util.NavigationController
 import com.wordpress.lonelytripblog.funwithflags.viewmodels.GameViewModel
 import kotlinx.android.synthetic.main.fragment_info.view.*
@@ -19,7 +19,7 @@ import javax.inject.Inject
 const val FROM_GAME_FRAGMENT = "from_game_fragment"
 const val AFTER_ALL_FLAGS_WERE_REVIEWED = "all_flags_were_reviewed"
 
-class InfoFragment : Fragment(), InjectableFragment {
+class InfoFragment : Fragment(), InjectMe {
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory

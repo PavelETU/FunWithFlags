@@ -1,27 +1,25 @@
 package com.wordpress.lonelytripblog.funwithflags.ui;
 
 
-import androidx.lifecycle.ViewModelProvider;
-import androidx.lifecycle.ViewModelProviders;
 import android.os.Bundle;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.wordpress.lonelytripblog.funwithflags.databinding.GameFragBinding;
-import com.wordpress.lonelytripblog.funwithflags.di.InjectableFragment;
+import com.wordpress.lonelytripblog.funwithflags.di.InjectMe;
 import com.wordpress.lonelytripblog.funwithflags.util.NavigationController;
 import com.wordpress.lonelytripblog.funwithflags.viewmodels.GameViewModel;
 
 import javax.inject.Inject;
 
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.lifecycle.ViewModelProviders;
 
-/**
- * A simple {@link Fragment} subclass.
- */
-public class GameFragment extends Fragment implements InjectableFragment {
+
+public class GameFragment extends Fragment implements InjectMe {
 
     public GameViewModel viewModel;
     private GameFragBinding mGameFragBinding;

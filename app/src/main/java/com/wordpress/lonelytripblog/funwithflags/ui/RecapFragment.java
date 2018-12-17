@@ -1,23 +1,24 @@
 package com.wordpress.lonelytripblog.funwithflags.ui;
 
-import androidx.lifecycle.ViewModelProvider;
-import androidx.lifecycle.ViewModelProviders;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.wordpress.lonelytripblog.funwithflags.databinding.RecapFragBinding;
-import com.wordpress.lonelytripblog.funwithflags.di.InjectableFragment;
+import com.wordpress.lonelytripblog.funwithflags.di.InjectMe;
 import com.wordpress.lonelytripblog.funwithflags.util.NavigationController;
 import com.wordpress.lonelytripblog.funwithflags.viewmodels.GameViewModel;
 
 import javax.inject.Inject;
 
-public class RecapFragment extends Fragment implements InjectableFragment {
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.lifecycle.ViewModelProviders;
+
+public class RecapFragment extends Fragment implements InjectMe {
 
     private GameViewModel viewModel;
     private RecapFragBinding recapFragBinding;
@@ -26,7 +27,7 @@ public class RecapFragment extends Fragment implements InjectableFragment {
     public NavigationController navigationController;
 
     @Inject
-    public ViewModelProvider.Factory viewModelFactory;
+    ViewModelProvider.Factory viewModelFactory;
 
     @Nullable
     @Override
