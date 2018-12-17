@@ -10,6 +10,6 @@ import javax.inject.Singleton
     AndroidInjectionModule::class,
     ActivityContributor::class,
     ViewModelsProvider::class])
-public interface AppMainComponent {
+interface AppMainComponent {
     fun injectApp(app: FunWithFlagApp)
 }

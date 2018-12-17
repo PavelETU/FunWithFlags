@@ -21,7 +21,6 @@ import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.*
 import java.util.concurrent.Executor
 
-@RunWith(JUnit4::class)
 class RepositoryTests {
 
     private lateinit var repository: GameRepository
@@ -36,7 +35,7 @@ class RepositoryTests {
     fun setUp() {
         `when`(db.countryDao()).thenReturn(dao)
         val fakeExecutor = mock(Executor::class.java)
-        doAnswer({ (it.arguments[0] as Runnable).run() }).`when`(fakeExecutor).execute(any())
+        doAnswer{ (it.arguments[0] as Runnable).run() }.`when`(fakeExecutor).execute(any())
         repository = GameRepository(db, fakeExecutor)
     }
 
@@ -79,7 +78,7 @@ class RepositoryTests {
         liveDataCountriesNames.postValue(countries)
         `when`(dao.getRandomCountryToLearn()).thenReturn(liveDataCountry)
         `when`(dao.getRandomCountriesOtherThanChosen(ArgumentMatchers.anyInt())).thenReturn(liveDataCountriesNames)
-        repository.liveDataForGame.observeForever(observer)
+        repository.getLiveDataForGame().observeForever(observer)
     }
 
 }

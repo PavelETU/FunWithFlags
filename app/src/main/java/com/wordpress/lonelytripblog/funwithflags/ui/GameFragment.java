@@ -13,6 +13,7 @@ import com.wordpress.lonelytripblog.funwithflags.viewmodels.GameViewModel;
 
 import javax.inject.Inject;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
@@ -21,7 +22,7 @@ import androidx.lifecycle.ViewModelProviders;
 
 public class GameFragment extends Fragment implements InjectMe {
 
-    public GameViewModel viewModel;
+    private GameViewModel viewModel;
     private GameFragBinding mGameFragBinding;
 
     @Inject
@@ -35,7 +36,7 @@ public class GameFragment extends Fragment implements InjectMe {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         mGameFragBinding = GameFragBinding.inflate(inflater, container, false);
         return mGameFragBinding.getRoot();
