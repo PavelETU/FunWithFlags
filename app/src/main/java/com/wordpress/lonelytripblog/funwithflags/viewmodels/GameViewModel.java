@@ -1,17 +1,8 @@
 package com.wordpress.lonelytripblog.funwithflags.viewmodels;
 
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MediatorLiveData;
-import androidx.lifecycle.ViewModel;
-import androidx.lifecycle.ViewModelProvider;
-import androidx.databinding.BindingAdapter;
-import androidx.databinding.ObservableArrayList;
-import androidx.databinding.ObservableList;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.TransitionDrawable;
 import android.os.Build;
-import androidx.annotation.NonNull;
-import androidx.core.content.ContextCompat;
 import android.util.Pair;
 import android.view.View;
 import android.widget.Button;
@@ -30,10 +21,15 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
+import androidx.databinding.BindingAdapter;
+import androidx.databinding.ObservableArrayList;
+import androidx.databinding.ObservableList;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MediatorLiveData;
+import androidx.lifecycle.ViewModel;
 
-/**
- * Created by Павел on 29.12.2017.
- */
 
 public class GameViewModel extends ViewModel implements CallbackForTimer {
 
@@ -49,7 +45,7 @@ public class GameViewModel extends ViewModel implements CallbackForTimer {
     private static int amountOfButtonsAnimatedBeforeRotation;
 
     @Inject
-    public GameViewModel(@NonNull final GameRepo gameRepo, @NonNull final Counter counter) {
+    public GameViewModel(@NonNull GameRepo gameRepo, @NonNull Counter counter) {
         gameRepository = gameRepo;
         this.counter = counter;
         initVariables();
@@ -195,25 +191,5 @@ public class GameViewModel extends ViewModel implements CallbackForTimer {
     public void requestNewLearntFlag() {
         gameRepository.nextLearntFlag();
     }
-
-    public static class GameViewModelFactory implements ViewModelProvider.Factory {
-
-        private final GameRepo gameRepo;
-        private final Counter counter;
-
-        @Inject
-        public GameViewModelFactory(GameRepo gameRepo, Counter counter) {
-            this.gameRepo = gameRepo;
-            this.counter = counter;
-        }
-
-        @NonNull
-        @Override
-        @SuppressWarnings("unchecked overriding")
-        public GameViewModel create(@NonNull Class modelClass) {
-            return new GameViewModel(gameRepo, counter);
-        }
-    }
-
 
 }
