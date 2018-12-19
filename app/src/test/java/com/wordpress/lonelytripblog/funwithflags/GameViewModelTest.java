@@ -44,7 +44,7 @@ public class GameViewModelTest {
                 new ArrayList<>(Arrays.asList("Russia", "USA", "Thailand", "Germany")), 3);
         gameEntityLiveData = new MutableLiveData<>();
         gameEntityLiveData.setValue(currentGameEntity);
-        when(gameRepo.getLiveDataForGame()).then(invocation -> gameEntityLiveData);
+        when(gameRepo.getUnknownCountryGameEntity()).then(invocation -> gameEntityLiveData);
         viewModel = new GameViewModel(gameRepo, counter);
         viewModel.setRightAnswer(3);
     }
@@ -103,7 +103,7 @@ public class GameViewModelTest {
     @Test
     public void repoRequestedOnTimerStop() {
         viewModel.doOnTimerStop();
-        verify(gameRepo, times(1)).nextFlag();
+        verify(gameRepo, times(1)).requestNewGameEntity();
     }
 
     @Test

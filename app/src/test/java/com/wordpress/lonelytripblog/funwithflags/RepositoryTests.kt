@@ -13,8 +13,6 @@ import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import org.junit.runner.RunWith
-import org.junit.runners.JUnit4
 import org.mockito.ArgumentCaptor
 import org.mockito.ArgumentMatchers
 import org.mockito.ArgumentMatchers.any
@@ -68,6 +66,17 @@ class RepositoryTests {
         assertThat(currentGameEntity.countries[currentGameEntity.rightAnswer], `is`(rightCountry.name))
     }
 
+    @Test
+    fun nextFlagRequest() {
+        val idOfRightCounty = 8
+        prepopulateRepoWithData(rightCountry = Country(idOfRightCounty, "Country name", 2, "Description for country"))
+
+        repository.requestNewGameEntity()
+
+        verify(dao, times(2)).getRandomCountryToLearn()
+        verify(dao, times(2)).getRandomCountriesOtherThanChosen(idOfRightCounty)
+    }
+
     private fun prepopulateRepoWithData(countries: ArrayList<String> = arrayListOf(
             "Some random country", "Another one", "And another one"), rightCountry: Country,
                                         observer: Observer<GameEntity> = (mock(Observer::class.java)
@@ -78,7 +87,7 @@ class RepositoryTests {
         liveDataCountriesNames.postValue(countries)
         `when`(dao.getRandomCountryToLearn()).thenReturn(liveDataCountry)
         `when`(dao.getRandomCountriesOtherThanChosen(ArgumentMatchers.anyInt())).thenReturn(liveDataCountriesNames)
-        repository.getLiveDataForGame().observeForever(observer)
+        repository.getUnknownCountryGameEntity().observeForever(observer)
     }
 
 }

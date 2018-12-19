@@ -60,7 +60,7 @@ public class GameViewModel extends ViewModel implements CallbackForTimer {
 
     public LiveData<GameEntity> getGameEntity() {
         if (gameEntityLiveData == null) {
-            gameEntityLiveData = gameRepository.getLiveDataForGame();
+            gameEntityLiveData = gameRepository.getUnknownCountryGameEntity();
         }
         return gameEntityLiveData;
     }
@@ -105,7 +105,7 @@ public class GameViewModel extends ViewModel implements CallbackForTimer {
     @Override
     public void doOnTimerStop() {
         resetValues();
-        gameRepository.nextFlag();
+        gameRepository.requestNewGameEntity();
     }
 
     private void resetValues() {

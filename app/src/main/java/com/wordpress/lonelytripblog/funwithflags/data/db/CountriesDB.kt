@@ -28,9 +28,9 @@ abstract class CountriesDB : RoomDatabase() {
                 .addCallback(object : Callback() {
                     override fun onCreate(db: SupportSQLiteDatabase) {
                         super.onCreate(db)
-                        Executors.newSingleThreadExecutor().execute({
+                        Executors.newSingleThreadExecutor().execute {
                             getInstance(appContext).countryDao().insertCountries(countriesList)
-                        })
+                        }
                     }
                 }).build()
 

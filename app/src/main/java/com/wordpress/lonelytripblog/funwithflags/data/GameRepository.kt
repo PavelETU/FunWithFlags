@@ -10,19 +10,19 @@ import javax.inject.Inject
 
 class GameRepository @Inject constructor(
         private val db: CountriesDB,
-        private val executor: Executor): GameRepo {
-    private var result: MediatorLiveData<GameEntity> = MediatorLiveData()
-    private var learntCountries: MutableList<Country>? = null
-    private var learntCountry: MediatorLiveData<Country>? = null
+        private val executor: Executor) : GameRepo {
+    private var unknownFlagGameEntity: MediatorLiveData<GameEntity> = MediatorLiveData()
+    private var learntCountries: MutableList<Country> = mutableListOf()
+    private var learntCountry: MediatorLiveData<Country> = MediatorLiveData()
     private lateinit var currentCountry: Country
 
-    override fun getLiveDataForGame(): LiveData<GameEntity> {
-        addSourceToResultFromDb()
-        return result
+    override fun getUnknownCountryGameEntity(): LiveData<GameEntity> {
+        updateGameEntityWithNextValueOrNullIfAllFlagsAreLearnt()
+        return unknownFlagGameEntity
     }
 
-    override fun nextFlag() {
-        addSourceToResultFromDb()
+    override fun requestNewGameEntity() {
+        updateGameEntityWithNextValueOrNullIfAllFlagsAreLearnt()
     }
 
     override fun saveCurrentFlagIntoLearntFlags() {
@@ -35,15 +35,15 @@ class GameRepository @Inject constructor(
 
     override fun getLearntFlag(): LiveData<Country> {
         learntCountry = MediatorLiveData()
-        if (learntCountries == null || learntCountries!!.isEmpty()) {
-            learntCountry!!.addSource(db.countryDao().getLearntCountries()) { countries ->
+        if (learntCountries.isEmpty()) {
+            learntCountry.addSource(db.countryDao().getLearntCountries()) { countries ->
                 learntCountries = countries.toMutableList()
                 postValueToLearntCountry()
             }
         } else {
             postValueToLearntCountry()
         }
-        return learntCountry!!
+        return learntCountry
     }
 
     override fun nextLearntFlag() {
@@ -52,38 +52,46 @@ class GameRepository @Inject constructor(
 
     override fun getAmountOfLearntFlags(): LiveData<Int> = db.countryDao().getCountForType(1)
 
-    private fun addSourceToResultFromDb() {
+    private fun updateGameEntityWithNextValueOrNullIfAllFlagsAreLearnt() {
         val countryLiveData = db.countryDao().getRandomCountryToLearn()
-        result.addSource(countryLiveData) { country ->
+        unknownFlagGameEntity.addSource(countryLiveData) { country ->
             if (country == null) {
-                result.postValue(null)
+                unknownFlagGameEntity.postValue(null)
                 return@addSource
             }
             currentCountry = country
-            val gameEntityLiveData = Transformations.map(db.countryDao()
-                    .getRandomCountriesOtherThanChosen(country.id)) { input ->
-                val rightAnswerPosition = (Math.random() * 4).toInt()
-                GameEntity(currentCountry.resourceId,
-                if (rightAnswerPosition > input.size) {
-                    input.plus(currentCountry.name)
-                } else {
-                    input.toMutableList().apply { add(rightAnswerPosition, currentCountry.name) }
-                }
-                        , rightAnswerPosition)
+            val gameEntityLiveData = generateGameEntityWithCurrentCountryAsAnswer()
+            unknownFlagGameEntity.addSource(gameEntityLiveData) { gameEntity ->
+                unknownFlagGameEntity.postValue(gameEntity)
+                unknownFlagGameEntity.removeSource(gameEntityLiveData)
             }
-            result.addSource(gameEntityLiveData) { gameEntity ->
-                result.postValue(gameEntity)
-                result.removeSource(gameEntityLiveData)
-            }
-            result.removeSource(countryLiveData)
+            unknownFlagGameEntity.removeSource(countryLiveData)
         }
     }
 
+    private fun generateGameEntityWithCurrentCountryAsAnswer(): LiveData<GameEntity> =
+            Transformations.map(db.countryDao()
+                    .getRandomCountriesOtherThanChosen(currentCountry.id)) { randomCountries ->
+                getGameEntityWithCurrentCountry(randomCountries)
+            }
+
+    private fun getGameEntityWithCurrentCountry(randomCountries: List<String>): GameEntity {
+        val rightAnswerPosition = (Math.random() * 4).toInt()
+        return GameEntity(currentCountry.resourceId,
+                if (rightAnswerPosition > randomCountries.size) {
+                    randomCountries.plus(currentCountry.name)
+                } else {
+                    randomCountries.toMutableList().apply { add(rightAnswerPosition, currentCountry.name) }
+                }
+                , rightAnswerPosition)
+    }
+
+
     private fun postValueToLearntCountry() {
-        if (learntCountries!!.isEmpty()) {
-            learntCountry!!.postValue(null)
+        if (learntCountries.isEmpty()) {
+            learntCountry.postValue(null)
         } else {
-            learntCountry!!.postValue(learntCountries!!.removeAt(0))
+            learntCountry.postValue(learntCountries.removeAt(0))
         }
     }
 
