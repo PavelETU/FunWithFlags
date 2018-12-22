@@ -1,6 +1,6 @@
 package com.wordpress.lonelytripblog.funwithflags.di
 
-import com.wordpress.lonelytripblog.funwithflags.FunWithFlagApp
+import com.wordpress.lonelytripblog.funwithflags.FunWithFlagsApp
 import dagger.Component
 import dagger.android.AndroidInjectionModule
 import javax.inject.Singleton
@@ -11,5 +11,5 @@ import javax.inject.Singleton
     ActivityContributor::class,
     ViewModelsProvider::class])
 interface AppMainComponent {
-    fun injectApp(app: FunWithFlagApp)
+    fun injectApp(app: FunWithFlagsApp)
 }
