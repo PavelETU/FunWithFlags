@@ -1,18 +1,18 @@
 package com.wordpress.lonelytripblog.funwithflags.ui
 
 
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
 import com.wordpress.lonelytripblog.funwithflags.R
 import com.wordpress.lonelytripblog.funwithflags.di.InjectMe
 import com.wordpress.lonelytripblog.funwithflags.util.NavigationController
-import com.wordpress.lonelytripblog.funwithflags.viewmodels.GameViewModel
+import com.wordpress.lonelytripblog.funwithflags.viewmodels.InfoViewModel
 import kotlinx.android.synthetic.main.fragment_info.view.*
 import javax.inject.Inject
 
@@ -30,7 +30,7 @@ class InfoFragment : Fragment(), InjectMe {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_info, container, false)
-        val viewModel = ViewModelProviders.of(this, viewModelFactory).get(GameViewModel::class.java)
+        val viewModel = ViewModelProviders.of(this, viewModelFactory).get(InfoViewModel::class.java)
         val calledFromGameFragment = arguments?.getBoolean(FROM_GAME_FRAGMENT) ?: false
         val allFlagsWereReviewed = arguments?.getBoolean(AFTER_ALL_FLAGS_WERE_REVIEWED) ?: false
         viewModel.amountOfLearntAndLeftFlags.observe(this, Observer {
@@ -81,6 +81,4 @@ class InfoFragment : Fragment(), InjectMe {
         }
         return view
     }
-
-
 }

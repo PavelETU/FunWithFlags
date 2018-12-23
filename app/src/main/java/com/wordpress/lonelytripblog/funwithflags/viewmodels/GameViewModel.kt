@@ -3,7 +3,6 @@ package com.wordpress.lonelytripblog.funwithflags.viewmodels
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.TransitionDrawable
 import android.os.Build
-import android.util.Pair
 import android.view.View
 import android.widget.Button
 import android.widget.ImageView
@@ -11,40 +10,23 @@ import androidx.core.content.ContextCompat
 import androidx.databinding.BindingAdapter
 import androidx.databinding.ObservableArrayList
 import androidx.databinding.ObservableList
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.ViewModel
 import com.wordpress.lonelytripblog.funwithflags.R
 import com.wordpress.lonelytripblog.funwithflags.data.GameRepo
-import com.wordpress.lonelytripblog.funwithflags.data.db.Country
 import com.wordpress.lonelytripblog.funwithflags.util.CallbackForTimer
 import com.wordpress.lonelytripblog.funwithflags.util.Counter
 import java.util.*
 import javax.inject.Inject
 
 open class GameViewModel @Inject constructor(private val gameRepository: GameRepo,
-                                        private val counter: Counter) : ViewModel(), CallbackForTimer {
+                                             private val counter: Counter) : ViewModel(), CallbackForTimer {
 
     val animateThisItemAsChosen: ObservableList<Boolean> = ObservableArrayList()
     val showAsRightAnswer: ObservableList<Boolean> = ObservableArrayList()
     private var lastChosenPosition = -1
     private var rightAnswerPosition = -1
-    private var learntCountry = gameRepository.getLearntFlag()
 
     open val gameEntity = gameRepository.getUnknownCountryGameEntity()
-
-    val amountOfLearntAndLeftFlags: LiveData<Pair<Int, Int>>
-        get() {
-            val mediatorLiveData = MediatorLiveData<Pair<Int, Int>>()
-            mediatorLiveData.addSource(gameRepository.getAmountOfLeftFlags()) { leftFlags ->
-                mediatorLiveData.addSource(gameRepository.getAmountOfLearntFlags()) { learntFlags ->
-                    mediatorLiveData.postValue(Pair(learntFlags, leftFlags))
-                    mediatorLiveData.removeSource(gameRepository.getAmountOfLeftFlags())
-                    mediatorLiveData.removeSource(gameRepository.getAmountOfLearntFlags())
-                }
-            }
-            return mediatorLiveData
-        }
 
     init {
         initVariables()
@@ -108,14 +90,6 @@ open class GameViewModel @Inject constructor(private val gameRepository: GameRep
         if (rightAnswerPosition != -1 && showAsRightAnswer[rightAnswerPosition]) {
             showAsRightAnswer[rightAnswerPosition] = false
         }
-    }
-
-    fun getLearntCountry(): LiveData<Country> {
-        return learntCountry
-    }
-
-    fun requestNewLearntFlag() {
-        gameRepository.nextLearntFlag()
     }
 
     companion object {

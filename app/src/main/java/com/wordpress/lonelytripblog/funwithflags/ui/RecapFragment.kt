@@ -12,12 +12,12 @@ import com.wordpress.lonelytripblog.funwithflags.data.db.Country
 import com.wordpress.lonelytripblog.funwithflags.databinding.RecapFragBinding
 import com.wordpress.lonelytripblog.funwithflags.di.InjectMe
 import com.wordpress.lonelytripblog.funwithflags.util.NavigationController
-import com.wordpress.lonelytripblog.funwithflags.viewmodels.GameViewModel
+import com.wordpress.lonelytripblog.funwithflags.viewmodels.RecapViewModel
 import javax.inject.Inject
 
 class RecapFragment : Fragment(), InjectMe {
 
-    private lateinit var viewModel: GameViewModel
+    private lateinit var viewModel: RecapViewModel
     private lateinit var recapFragBinding: RecapFragBinding
 
     @Inject
@@ -33,8 +33,8 @@ class RecapFragment : Fragment(), InjectMe {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProviders.of(this, viewModelFactory).get(GameViewModel::class.java)
-        recapFragBinding.gameViewModel = viewModel
+        viewModel = ViewModelProviders.of(this, viewModelFactory).get(RecapViewModel::class.java)
+        recapFragBinding.recapViewModel = viewModel
         viewModel.getLearntCountry().observe(this, Observer<Country> { country ->
             country?.bindToCurrentView() ?: navigateToInfoFragment()
         })

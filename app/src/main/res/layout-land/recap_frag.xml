@@ -5,8 +5,8 @@
     <data>
 
         <variable
-            name="gameViewModel"
-            type="com.wordpress.lonelytripblog.funwithflags.viewmodels.GameViewModel" />
+            name="recapViewModel"
+            type="com.wordpress.lonelytripblog.funwithflags.viewmodels.RecapViewModel" />
 
         <variable
             name="country"
@@ -82,7 +82,7 @@
             android:layout_marginRight="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            android:onClick="@{() -> gameViewModel.requestNewLearntFlag()}"
+            android:onClick="@{() -> recapViewModel.requestNewLearntFlag()}"
             android:text="@string/next_learnt_flag"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
