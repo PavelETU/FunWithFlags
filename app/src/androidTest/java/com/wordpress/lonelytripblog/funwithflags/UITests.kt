@@ -29,6 +29,7 @@ class UITests {
         val gameFragment = GameFragment()
         fakeViewModel = mock<GameViewModel>(GameViewModel::class.java)
         `when`<LiveData<GameEntity>>(fakeViewModel.gameEntity).thenReturn(fakeGameEntity)
+        returnProperBackgroundForButtons()
         gameFragment.viewModelFactory = object : ViewModelProvider.Factory {
             override fun <T : ViewModel?> create(modelClass: Class<T>): T {
                 return fakeViewModel as T
@@ -96,6 +97,14 @@ class UITests {
         onView(withId(R.id.button2)).check(ViewAssertions.matches(withText(countriesNames[1])))
         onView(withId(R.id.button3)).check(ViewAssertions.matches(withText(countriesNames[2])))
         onView(withId(R.id.button4)).check(ViewAssertions.matches(withText(countriesNames[3])))
+    }
+
+    private fun returnProperBackgroundForButtons() {
+        val res = MutableLiveData<Int>().apply { postValue(R.drawable.btn_background) }
+        `when`<LiveData<Int>>(fakeViewModel.firstButtonDrawable).thenReturn(res)
+        `when`<LiveData<Int>>(fakeViewModel.secondButtonDrawable).thenReturn(res)
+        `when`<LiveData<Int>>(fakeViewModel.thirdButtonDrawable).thenReturn(res)
+        `when`<LiveData<Int>>(fakeViewModel.fourthButtonDrawable).thenReturn(res)
     }
 
 }

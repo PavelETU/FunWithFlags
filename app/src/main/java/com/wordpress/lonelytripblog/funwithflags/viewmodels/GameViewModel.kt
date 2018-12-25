@@ -1,6 +1,7 @@
 package com.wordpress.lonelytripblog.funwithflags.viewmodels
 
 import android.graphics.drawable.Drawable
+import android.graphics.drawable.GradientDrawable
 import android.graphics.drawable.TransitionDrawable
 import android.os.Build
 import android.view.View
@@ -8,50 +9,25 @@ import android.widget.Button
 import android.widget.ImageView
 import androidx.core.content.ContextCompat
 import androidx.databinding.BindingAdapter
-import androidx.databinding.ObservableArrayList
-import androidx.databinding.ObservableList
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.wordpress.lonelytripblog.funwithflags.R
 import com.wordpress.lonelytripblog.funwithflags.data.GameRepo
 import com.wordpress.lonelytripblog.funwithflags.util.CallbackForTimer
 import com.wordpress.lonelytripblog.funwithflags.util.Counter
-import java.util.*
 import javax.inject.Inject
 
 open class GameViewModel @Inject constructor(private val gameRepository: GameRepo,
                                              private val counter: Counter) : ViewModel(), CallbackForTimer {
 
-    val animateThisItemAsChosen: ObservableList<Boolean> = ObservableArrayList()
-    val showAsRightAnswer: ObservableList<Boolean> = ObservableArrayList()
+    open val firstButtonDrawable = MutableLiveData<Int>().apply { value = R.drawable.btn_background }
+    open val secondButtonDrawable = MutableLiveData<Int>().apply { value = R.drawable.btn_background }
+    open val thirdButtonDrawable = MutableLiveData<Int>().apply { value = R.drawable.btn_background }
+    open val fourthButtonDrawable = MutableLiveData<Int>().apply { value = R.drawable.btn_background }
     private var lastChosenPosition = -1
     private var rightAnswerPosition = -1
 
     open val gameEntity = gameRepository.getUnknownCountryGameEntity()
-
-    init {
-        initVariables()
-    }
-
-    private fun initVariables() {
-        val dullList = ArrayList(Arrays.asList(false, false, false, false))
-        animateThisItemAsChosen.addAll(dullList)
-        showAsRightAnswer.addAll(dullList)
-        amountOfButtonsAnimatedBeforeRotation = 0
-    }
-
-    // Workaround to not show buttons animation after rotation
-    open fun beforeRemoveObserver() {
-        amountOfButtonsAnimatedBeforeRotation =
-                if (showAsRightAnswer[0] || showAsRightAnswer[1] || showAsRightAnswer[2]
-                        || showAsRightAnswer[3]) {
-                    // In case of different chosen and right answer two buttons were animated. Neglect other case for now
-                    2
-                } else if (lastChosenPosition != -1) {
-                    1
-                } else {
-                    0
-                }
-    }
 
     /*
         Called by databinding upon user click on one of the buttons
@@ -59,18 +35,40 @@ open class GameViewModel @Inject constructor(private val gameRepository: GameRep
     fun getAnswerByUser(userAnswer: Int) {
         if (lastChosenPosition != userAnswer) {
             if (lastChosenPosition != -1) {
-                animateThisItemAsChosen[lastChosenPosition] = false
+                setResourceToDefault(lastChosenPosition)
             }
-            animateThisItemAsChosen[userAnswer] = true
+            setResourceToChosen(userAnswer)
             // User confirms answer
         } else {
             if (userAnswer == rightAnswerPosition) {
                 gameRepository.saveCurrentFlagIntoLearntFlags()
             }
-            showAsRightAnswer[rightAnswerPosition] = true
+            setResourceToRight(rightAnswerPosition)
             counter.startCounter(this)
         }
         lastChosenPosition = userAnswer
+    }
+
+    private fun setResourceToDefault(position: Int) {
+        getLiveDataForButtonByPosition(position).value = R.drawable.btn_background
+    }
+
+    private fun setResourceToChosen(position: Int) {
+        getLiveDataForButtonByPosition(position).value = R.drawable.btn_background_chosen
+    }
+
+    private fun setResourceToRight(position: Int) {
+        getLiveDataForButtonByPosition(position).value = R.drawable.btn_background_right_answer
+    }
+
+    private fun getLiveDataForButtonByPosition(position: Int): MutableLiveData<Int> {
+        return when (position) {
+            0 -> firstButtonDrawable
+            1 -> secondButtonDrawable
+            2 -> thirdButtonDrawable
+            3 -> fourthButtonDrawable
+            else -> throw RuntimeException("Unknown position")
+        }
     }
 
     open fun setRightAnswer(position: Int) {
@@ -83,53 +81,32 @@ open class GameViewModel @Inject constructor(private val gameRepository: GameRep
     }
 
     private fun resetValues() {
-        if (lastChosenPosition != -1) {
-            animateThisItemAsChosen[lastChosenPosition] = false
-            lastChosenPosition = -1
+        if (rightAnswerPosition != -1 && lastChosenPosition != rightAnswerPosition) {
+            setResourceToDefault(rightAnswerPosition)
         }
-        if (rightAnswerPosition != -1 && showAsRightAnswer[rightAnswerPosition]) {
-            showAsRightAnswer[rightAnswerPosition] = false
+        if (lastChosenPosition != -1) {
+            setResourceToDefault(lastChosenPosition)
+            lastChosenPosition = -1
         }
     }
 
     companion object {
-        private var amountOfButtonsAnimatedBeforeRotation: Int = 0
 
         @JvmStatic
-        @BindingAdapter(value = *arrayOf("animate_as_chosen", "animate_as_right_answer"))
-        fun setAnimation(view: Button?, showAsChosen: Boolean?, showAsRightAnswer: Boolean?) {
-            var secondDrawable: Drawable? = null
-            if (view == null || showAsChosen == null || showAsRightAnswer == null) return
-            if (showAsChosen && !showAsRightAnswer) {
-                secondDrawable = ContextCompat.getDrawable(view.context,
-                        R.drawable.btn_background_chosen)
-            }
-            if (showAsRightAnswer) {
-                secondDrawable = ContextCompat.getDrawable(view.context,
-                        R.drawable.btn_background_right_answer)
-            }
-            if (!showAsChosen && !showAsRightAnswer) {
-                secondDrawable = ContextCompat.getDrawable(view.context,
-                        R.drawable.btn_background)
-            }
-            if (secondDrawable != null) {
-                // Do not animate button after rotation and during default background setting
-                if (amountOfButtonsAnimatedBeforeRotation != 0 || !showAsChosen && !showAsRightAnswer) {
-                    setDrawableForImage(view, secondDrawable)
-                } else {
-                    val myDraw = TransitionDrawable(arrayOf(view.background, secondDrawable))
-                    setDrawableForImage(view, myDraw)
-                    myDraw.startTransition(1000)
-                }
-            }
-            // Workaround for not showing buttons animation after screen rotation
-            if (amountOfButtonsAnimatedBeforeRotation != 0 && (showAsChosen || showAsRightAnswer)) {
-                // Handle case when right answer chosen before rotation
-                if (amountOfButtonsAnimatedBeforeRotation == 1 || showAsChosen && showAsRightAnswer) {
-                    amountOfButtonsAnimatedBeforeRotation = 0
-                } else if (amountOfButtonsAnimatedBeforeRotation == 2) {
-                    amountOfButtonsAnimatedBeforeRotation--
-                }
+        @BindingAdapter("setImage")
+        fun setImage(view: ImageView?, imageUrl: Int?) {
+            if (view == null || imageUrl == null) return
+            view.setImageResource(imageUrl)
+        }
+
+        @JvmStatic
+        @BindingAdapter("backgroundDrawable")
+        fun backgroundDrawable(view: Button, drawableResId: Int) {
+            val background = view.background
+            if (thisCanBeAnimated(drawableResId) && thisShouldBeAnimated(background)) {
+                animateView(background, view, drawableResId)
+            } else {
+                setDrawableForImage(view, ContextCompat.getDrawable(view.context, drawableResId)!!)
             }
         }
 
@@ -141,11 +118,17 @@ open class GameViewModel @Inject constructor(private val gameRepository: GameRep
             }
         }
 
-        @JvmStatic
-        @BindingAdapter("setImage")
-        fun setImage(view: ImageView?, imageUrl: Int?) {
-            if (view == null || imageUrl == null) return
-            view.setImageResource(imageUrl)
+        private fun thisCanBeAnimated(drawableResId: Int) =
+                drawableResId == R.drawable.btn_background_chosen
+                        || drawableResId == R.drawable.btn_background_right_answer
+
+        private fun thisShouldBeAnimated(imageDrawable: Drawable) =
+                imageDrawable is TransitionDrawable || imageDrawable is GradientDrawable
+
+        private fun animateView(background: Drawable, view: Button, drawableResId: Int) {
+            val myDraw = TransitionDrawable(arrayOf(background, ContextCompat.getDrawable(view.context, drawableResId)!!))
+            setDrawableForImage(view, myDraw)
+            myDraw.startTransition(1000)
         }
     }
 

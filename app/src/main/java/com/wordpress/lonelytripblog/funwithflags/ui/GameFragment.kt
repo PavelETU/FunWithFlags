@@ -30,6 +30,7 @@ class GameFragment : Fragment(), InjectMe {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         mGameFragBinding = GameFragBinding.inflate(inflater, container, false)
+        mGameFragBinding.setLifecycleOwner(this)
         return mGameFragBinding.root
     }
 
@@ -53,7 +54,6 @@ class GameFragment : Fragment(), InjectMe {
     }
 
     override fun onDestroyView() {
-        viewModel.beforeRemoveObserver()
         viewModel.gameEntity.removeObservers(this)
         super.onDestroyView()
     }

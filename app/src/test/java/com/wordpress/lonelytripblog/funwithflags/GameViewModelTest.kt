@@ -1,15 +1,12 @@
 package com.wordpress.lonelytripblog.funwithflags
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.wordpress.lonelytripblog.funwithflags.data.GameEntity
 import com.wordpress.lonelytripblog.funwithflags.data.GameRepo
 import com.wordpress.lonelytripblog.funwithflags.util.Counter
 import com.wordpress.lonelytripblog.funwithflags.viewmodels.GameViewModel
-import org.junit.Assert
-import org.junit.Assert.assertFalse
-import org.junit.Assert.assertTrue
+import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -17,7 +14,6 @@ import org.mockito.Mock
 import org.mockito.Mockito
 import org.mockito.Mockito.*
 import org.mockito.MockitoAnnotations
-import org.mockito.stubbing.Answer
 import java.util.*
 
 class GameViewModelTest {
@@ -39,7 +35,7 @@ class GameViewModelTest {
                 ArrayList(Arrays.asList("Russia", "USA", "Thailand", "Germany")), 3)
         gameEntityLiveData = MutableLiveData()
         gameEntityLiveData.value = currentGameEntity
-        Mockito.`when`(gameRepo.getUnknownCountryGameEntity()).then{ gameEntityLiveData }
+        Mockito.`when`(gameRepo.getUnknownCountryGameEntity()).then { gameEntityLiveData }
         viewModel = GameViewModel(gameRepo, counter)
         viewModel.setRightAnswer(3)
     }
@@ -49,11 +45,12 @@ class GameViewModelTest {
         // Choose
         val currentAnswer = 0
         viewModel.getAnswerByUser(currentAnswer)
-        assertTrue("After first click item should be animated",
-                viewModel.animateThisItemAsChosen[currentAnswer])
+        assertEquals("After first click item should be animated",
+                viewModel.firstButtonDrawable.value, R.drawable.btn_background_chosen)
         // Confirm
         viewModel.getAnswerByUser(currentAnswer)
-        assertTrue("After confirm answer should be displayed", viewModel.showAsRightAnswer[3])
+        assertEquals("After confirm answer should be displayed",
+                viewModel.firstButtonDrawable.value, R.drawable.btn_background_chosen)
     }
 
     @Test
@@ -63,11 +60,11 @@ class GameViewModelTest {
         viewModel.getAnswerByUser(1)
         viewModel.getAnswerByUser(2)
         viewModel.getAnswerByUser(3)
-        assertFalse(viewModel.animateThisItemAsChosen[0])
-        assertFalse(viewModel.animateThisItemAsChosen[1])
-        assertFalse(viewModel.animateThisItemAsChosen[2])
-        assertTrue(viewModel.animateThisItemAsChosen[3])
-        assertFalse(viewModel.showAsRightAnswer[3])
+
+        assertEquals(viewModel.firstButtonDrawable.value, R.drawable.btn_background)
+        assertEquals(viewModel.secondButtonDrawable.value, R.drawable.btn_background)
+        assertEquals(viewModel.thirdButtonDrawable.value, R.drawable.btn_background)
+        assertEquals(viewModel.fourthButtonDrawable.value, R.drawable.btn_background_chosen)
     }
 
     @Test
@@ -78,13 +75,12 @@ class GameViewModelTest {
         viewModel.getAnswerByUser(1)
         viewModel.getAnswerByUser(2)
         viewModel.getAnswerByUser(1)
-        assertFalse(viewModel.showAsRightAnswer[3])
         viewModel.getAnswerByUser(1)
-        assertTrue(viewModel.showAsRightAnswer[3])
-        assertFalse(viewModel.animateThisItemAsChosen[0])
-        assertFalse(viewModel.animateThisItemAsChosen[2])
-        assertFalse(viewModel.animateThisItemAsChosen[3])
-        assertTrue(viewModel.animateThisItemAsChosen[1])
+
+        assertEquals(viewModel.firstButtonDrawable.value, R.drawable.btn_background)
+        assertEquals(viewModel.secondButtonDrawable.value, R.drawable.btn_background_chosen)
+        assertEquals(viewModel.thirdButtonDrawable.value, R.drawable.btn_background)
+        assertEquals(viewModel.fourthButtonDrawable.value, R.drawable.btn_background_right_answer)
     }
 
     @Test
@@ -116,7 +112,7 @@ class GameViewModelTest {
 
     private fun callCallbackForTimerRightAway() {
         // Call onTimerStop right after startCounter was called (disable animation)
-        doAnswer{
+        doAnswer {
             if (it.arguments.isEmpty()) return@doAnswer null
             viewModel.doOnTimerStop()
             null
