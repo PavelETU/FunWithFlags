@@ -23,6 +23,7 @@ object BindingAdapters {
     @JvmStatic
     @BindingAdapter("backgroundDrawable")
     fun backgroundDrawable(view: Button, drawableResId: Int) {
+        if (drawableResId == 0) return
         val background = view.background
         if (thisCanBeAnimated(drawableResId) && thisShouldBeAnimated(background)) {
             animateView(background, view, drawableResId)
