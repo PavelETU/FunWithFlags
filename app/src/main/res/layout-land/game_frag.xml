@@ -3,17 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
-
-        <variable
-            name="countriesList"
-            type="java.util.List&lt;java.lang.String&gt;" />
-        <variable
-            name="countryImageResource"
-            type="java.lang.Integer"/>
         <variable
             name="gameViewModel"
             type="com.wordpress.lonelytripblog.funwithflags.viewmodels.GameViewModel" />
-
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -32,7 +24,7 @@
             app:layout_constraintEnd_toStartOf="@+id/guideline"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:setImage="@{countryImageResource}" />
+            app:setImage="@{gameViewModel.countryImageResId}" />
 
         <Button
             android:id="@+id/button"
@@ -47,7 +39,7 @@
             android:layout_marginTop="8dp"
             app:backgroundDrawable="@{gameViewModel.firstButtonDrawable}"
             android:onClick="@{() -> gameViewModel.getAnswerByUser(0)}"
-            android:text="@{countriesList.get(0)}"
+            android:text="@{gameViewModel.firstButtonText}"
             app:layout_constraintBottom_toTopOf="@+id/guideline3"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@+id/guideline"
@@ -66,7 +58,7 @@
             android:layout_marginTop="8dp"
             app:backgroundDrawable="@{gameViewModel.secondButtonDrawable}"
             android:onClick="@{() -> gameViewModel.getAnswerByUser(1)}"
-            android:text="@{countriesList.get(1)}"
+            android:text="@{gameViewModel.secondButtonText}"
             app:layout_constraintBottom_toTopOf="@+id/guideline4"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.502"
@@ -86,7 +78,7 @@
             android:layout_marginTop="8dp"
             app:backgroundDrawable="@{gameViewModel.thirdButtonDrawable}"
             android:onClick="@{() -> gameViewModel.getAnswerByUser(2)}"
-            android:text="@{countriesList.get(2)}"
+            android:text="@{gameViewModel.thirdButtonText}"
             app:layout_constraintBottom_toTopOf="@+id/guideline5"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/guideline"
@@ -105,7 +97,7 @@
             android:layout_marginTop="8dp"
             app:backgroundDrawable="@{gameViewModel.fourthButtonDrawable}"
             android:onClick="@{() -> gameViewModel.getAnswerByUser(3)}"
-            android:text="@{countriesList.get(3)}"
+            android:text="@{gameViewModel.fourthButtonText}"
             app:layout_constraintBottom_toTopOf="@+id/guideline6"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/guideline"

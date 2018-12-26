@@ -8,10 +8,11 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
-import com.wordpress.lonelytripblog.funwithflags.data.GameEntity
 import com.wordpress.lonelytripblog.funwithflags.databinding.GameFragBinding
 import com.wordpress.lonelytripblog.funwithflags.di.InjectMe
 import com.wordpress.lonelytripblog.funwithflags.util.NavigationController
+import com.wordpress.lonelytripblog.funwithflags.viewmodels.GAME_STATE_IN_PROGRESS
+import com.wordpress.lonelytripblog.funwithflags.viewmodels.GAME_STATE_NO_MORE_FLAGS
 import com.wordpress.lonelytripblog.funwithflags.viewmodels.GameViewModel
 import javax.inject.Inject
 
@@ -38,23 +39,24 @@ class GameFragment : Fragment(), InjectMe {
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(GameViewModel::class.java)
         mGameFragBinding.gameViewModel = viewModel
-        viewModel.gameEntity.observe(this, Observer<GameEntity> { result ->
-            result?.bindToUI() ?: navigateToGameInfoFragment()
+        viewModel.gameState.observe(this, Observer<Int> { result ->
+            when (result) {
+                GAME_STATE_NO_MORE_FLAGS -> navigateToGameInfoFragment()
+                GAME_STATE_IN_PROGRESS -> displayGame()
+            }
         })
-    }
-
-    private fun GameEntity.bindToUI() {
-        mGameFragBinding.countriesList = countries
-        mGameFragBinding.countryImageResource = countryImageUrl
-        viewModel.setRightAnswer(rightAnswer)
     }
 
     private fun navigateToGameInfoFragment() {
         navigationController.navigateToGameInformationFragment(true, false)
     }
 
+    private fun displayGame() {
+
+    }
+
     override fun onDestroyView() {
-        viewModel.gameEntity.removeObservers(this)
+        viewModel.gameState.removeObservers(this)
         super.onDestroyView()
     }
 

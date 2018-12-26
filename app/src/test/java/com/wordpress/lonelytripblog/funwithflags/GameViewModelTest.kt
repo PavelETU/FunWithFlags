@@ -2,9 +2,12 @@ package com.wordpress.lonelytripblog.funwithflags
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
 import com.wordpress.lonelytripblog.funwithflags.data.GameEntity
 import com.wordpress.lonelytripblog.funwithflags.data.GameRepo
 import com.wordpress.lonelytripblog.funwithflags.util.Counter
+import com.wordpress.lonelytripblog.funwithflags.viewmodels.GAME_STATE_IN_PROGRESS
+import com.wordpress.lonelytripblog.funwithflags.viewmodels.GAME_STATE_NO_MORE_FLAGS
 import com.wordpress.lonelytripblog.funwithflags.viewmodels.GameViewModel
 import org.junit.Assert.assertEquals
 import org.junit.Before
@@ -26,22 +29,21 @@ class GameViewModelTest {
     @Mock
     private lateinit var counter: Counter
     private lateinit var viewModel: GameViewModel
-    private lateinit var gameEntityLiveData: MutableLiveData<GameEntity>
+    private val gameEntityLiveData = MutableLiveData<GameEntity>()
+    private val defaultGameEntity = GameEntity(R.drawable.germany,
+            ArrayList(Arrays.asList("Russia", "USA", "Thailand", "Germany")), 3)
 
     @Before
     fun setUp() {
         MockitoAnnotations.initMocks(this)
-        val currentGameEntity = GameEntity(R.drawable.germany,
-                ArrayList(Arrays.asList("Russia", "USA", "Thailand", "Germany")), 3)
-        gameEntityLiveData = MutableLiveData()
-        gameEntityLiveData.value = currentGameEntity
         Mockito.`when`(gameRepo.getUnknownCountryGameEntity()).then { gameEntityLiveData }
         viewModel = GameViewModel(gameRepo, counter)
-        viewModel.setRightAnswer(3)
+        viewModel.gameState.observeForever(mock(Observer::class.java) as Observer<Int>)
     }
 
     @Test
     fun showRightAnswerAfterAnythingChosen() {
+        gameEntityLiveData.value = defaultGameEntity
         // Choose
         val currentAnswer = 0
         viewModel.getAnswerByUser(currentAnswer)
@@ -55,6 +57,7 @@ class GameViewModelTest {
 
     @Test
     fun whenMultiplyChoicesIsMadeSelectedOnlyLastAndNoAnswerIsShowing() {
+        gameEntityLiveData.value = defaultGameEntity
         // Choose
         viewModel.getAnswerByUser(0)
         viewModel.getAnswerByUser(1)
@@ -69,6 +72,7 @@ class GameViewModelTest {
 
     @Test
     fun madeMultipleChoicesAndGiveAnswer() {
+        gameEntityLiveData.value = defaultGameEntity
         // Choose
         viewModel.getAnswerByUser(0)
         viewModel.getAnswerByUser(3)
@@ -85,6 +89,7 @@ class GameViewModelTest {
 
     @Test
     fun timerStartAfterAnswerIsSet() {
+        gameEntityLiveData.value = defaultGameEntity
         viewModel.getAnswerByUser(0)
         viewModel.getAnswerByUser(0)
 
@@ -99,6 +104,7 @@ class GameViewModelTest {
 
     @Test
     fun ifUserGetRightAnswerSaveFlagIsCalled() {
+        gameEntityLiveData.value = defaultGameEntity
         callCallbackForTimerRightAway()
         // Confirm wrong answer
         viewModel.getAnswerByUser(0)
@@ -108,6 +114,20 @@ class GameViewModelTest {
         viewModel.getAnswerByUser(3)
 
         verify<GameRepo>(gameRepo, times(1)).saveCurrentFlagIntoLearntFlags()
+    }
+
+    @Test
+    fun noMoreFlagsIfGameEntityNull() {
+        gameEntityLiveData.value = null
+
+        assertEquals(GAME_STATE_NO_MORE_FLAGS, viewModel.gameState.value)
+    }
+
+    @Test
+    fun gameInProgressWithValidGameEntity() {
+        gameEntityLiveData.value = defaultGameEntity
+
+        assertEquals(GAME_STATE_IN_PROGRESS, viewModel.gameState.value)
     }
 
     private fun callCallbackForTimerRightAway() {

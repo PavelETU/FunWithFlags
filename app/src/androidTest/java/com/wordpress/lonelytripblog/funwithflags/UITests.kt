@@ -10,12 +10,16 @@ import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import com.wordpress.lonelytripblog.funwithflags.data.GameEntity
+import com.wordpress.lonelytripblog.funwithflags.data.GameRepo
 import com.wordpress.lonelytripblog.funwithflags.ui.GameFragment
+import com.wordpress.lonelytripblog.funwithflags.util.CallbackForTimer
+import com.wordpress.lonelytripblog.funwithflags.util.Counter
 import com.wordpress.lonelytripblog.funwithflags.util.NavigationController
 import com.wordpress.lonelytripblog.funwithflags.viewmodels.GameViewModel
 import org.junit.Before
 import org.junit.Test
-import org.mockito.Mockito.*
+import org.mockito.Mockito.`when`
+import org.mockito.Mockito.mock
 import java.util.*
 
 class UITests {
@@ -27,9 +31,13 @@ class UITests {
     @Before
     fun init() {
         val gameFragment = GameFragment()
-        fakeViewModel = mock<GameViewModel>(GameViewModel::class.java)
-        `when`<LiveData<GameEntity>>(fakeViewModel.gameEntity).thenReturn(fakeGameEntity)
-        returnProperBackgroundForButtons()
+        val fakeRepo = mock<GameRepo>(GameRepo::class.java)
+        `when`<LiveData<GameEntity>>(fakeRepo.getUnknownCountryGameEntity()).thenReturn(fakeGameEntity)
+        fakeViewModel = GameViewModel(fakeRepo, object : Counter {
+            override fun startCounter(callback: CallbackForTimer) {
+                callback.doOnTimerStop()
+            }
+        })
         gameFragment.viewModelFactory = object : ViewModelProvider.Factory {
             override fun <T : ViewModel?> create(modelClass: Class<T>): T {
                 return fakeViewModel as T
@@ -56,7 +64,6 @@ class UITests {
             e.printStackTrace()
         }
 
-        verify<GameViewModel>(fakeViewModel).setRightAnswer(0)
         onView(withId(R.id.button)).check(ViewAssertions.matches(withText(countriesNames[0])))
         onView(withId(R.id.button2)).check(ViewAssertions.matches(withText(countriesNames[1])))
         onView(withId(R.id.button3)).check(ViewAssertions.matches(withText(countriesNames[2])))
@@ -78,7 +85,6 @@ class UITests {
             e.printStackTrace()
         }
 
-        verify<GameViewModel>(fakeViewModel).setRightAnswer(2)
         countriesNames.clear()
         countriesNames.add("Ireland")
         countriesNames.add("Cyprus")
@@ -92,19 +98,10 @@ class UITests {
             e.printStackTrace()
         }
 
-        verify<GameViewModel>(fakeViewModel).setRightAnswer(3)
         onView(withId(R.id.button)).check(ViewAssertions.matches(withText(countriesNames[0])))
         onView(withId(R.id.button2)).check(ViewAssertions.matches(withText(countriesNames[1])))
         onView(withId(R.id.button3)).check(ViewAssertions.matches(withText(countriesNames[2])))
         onView(withId(R.id.button4)).check(ViewAssertions.matches(withText(countriesNames[3])))
-    }
-
-    private fun returnProperBackgroundForButtons() {
-        val res = MutableLiveData<Int>().apply { postValue(R.drawable.btn_background) }
-        `when`<LiveData<Int>>(fakeViewModel.firstButtonDrawable).thenReturn(res)
-        `when`<LiveData<Int>>(fakeViewModel.secondButtonDrawable).thenReturn(res)
-        `when`<LiveData<Int>>(fakeViewModel.thirdButtonDrawable).thenReturn(res)
-        `when`<LiveData<Int>>(fakeViewModel.fourthButtonDrawable).thenReturn(res)
     }
 
 }

@@ -5,6 +5,7 @@ import com.wordpress.lonelytripblog.funwithflags.data.GameRepo
 import com.wordpress.lonelytripblog.funwithflags.data.GameRepository
 import com.wordpress.lonelytripblog.funwithflags.data.db.CountriesDB
 import com.wordpress.lonelytripblog.funwithflags.util.Counter
+import com.wordpress.lonelytripblog.funwithflags.util.CounterImpl
 import dagger.Module
 import dagger.Provides
 import java.util.concurrent.Executor
@@ -28,6 +29,6 @@ class FunWithFlagsModule(private val appContext: Context) {
 
     @Provides
     @Singleton
-    fun provideCounter(): Counter = Counter()
+    fun provideCounter(): Counter = CounterImpl()
 
 }

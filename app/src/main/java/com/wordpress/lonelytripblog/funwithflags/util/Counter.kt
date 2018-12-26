@@ -2,7 +2,11 @@ package com.wordpress.lonelytripblog.funwithflags.util
 
 import android.os.CountDownTimer
 
-open class Counter : CountDownTimer(1500, 1500) {
+interface Counter {
+    fun startCounter(callback: CallbackForTimer)
+}
+
+class CounterImpl : Counter, CountDownTimer(1500, 1500) {
 
     private var callback: CallbackForTimer? = null
 
@@ -15,7 +19,7 @@ open class Counter : CountDownTimer(1500, 1500) {
 
     }
 
-    fun startCounter(callback: CallbackForTimer?) {
+    override fun startCounter(callback: CallbackForTimer) {
         this.callback = callback
         this.start()
     }

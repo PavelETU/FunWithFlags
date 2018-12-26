@@ -1,24 +1,52 @@
 package com.wordpress.lonelytripblog.funwithflags.viewmodels
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import com.wordpress.lonelytripblog.funwithflags.R
+import com.wordpress.lonelytripblog.funwithflags.data.GameEntity
 import com.wordpress.lonelytripblog.funwithflags.data.GameRepo
 import com.wordpress.lonelytripblog.funwithflags.util.CallbackForTimer
 import com.wordpress.lonelytripblog.funwithflags.util.Counter
 import javax.inject.Inject
-
+const val GAME_STATE_IN_PROGRESS = 1
+const val GAME_STATE_NO_MORE_FLAGS = 2
 open class GameViewModel @Inject constructor(private val gameRepository: GameRepo,
                                              private val counter: Counter) : ViewModel(), CallbackForTimer {
 
-    open val firstButtonDrawable = MutableLiveData<Int>().apply { value = R.drawable.btn_background }
-    open val secondButtonDrawable = MutableLiveData<Int>().apply { value = R.drawable.btn_background }
-    open val thirdButtonDrawable = MutableLiveData<Int>().apply { value = R.drawable.btn_background }
-    open val fourthButtonDrawable = MutableLiveData<Int>().apply { value = R.drawable.btn_background }
+    open val firstButtonDrawable = MutableLiveData<Int>().apply { postValue(R.drawable.btn_background) }
+    open val secondButtonDrawable = MutableLiveData<Int>().apply { postValue(R.drawable.btn_background) }
+    open val thirdButtonDrawable = MutableLiveData<Int>().apply { postValue(R.drawable.btn_background) }
+    open val fourthButtonDrawable = MutableLiveData<Int>().apply { postValue(R.drawable.btn_background) }
+    open val firstButtonText = MutableLiveData<String>()
+    open val secondButtonText = MutableLiveData<String>()
+    open val thirdButtonText = MutableLiveData<String>()
+    open val fourthButtonText = MutableLiveData<String>()
+    open val countryImageResId = MutableLiveData<Int>()
+
+    open val gameState: LiveData<Int> = Transformations.map(gameRepository.getUnknownCountryGameEntity()) {
+        it?.parseIntoLiveData()?.let { GAME_STATE_IN_PROGRESS } ?: GAME_STATE_NO_MORE_FLAGS
+    }
+
+    private fun GameEntity.parseIntoLiveData(): GameEntity {
+        countries.forEachIndexed{index, value -> getValueByIndex(index).value = value }
+        setRightAnswer(rightAnswer)
+        countryImageResId.value = countryImageUrl
+        return this
+    }
+
+    private fun getValueByIndex(index: Int): MutableLiveData<String> {
+        return when (index) {
+            0 -> firstButtonText
+            1 -> secondButtonText
+            2 -> thirdButtonText
+            3 -> fourthButtonText
+            else -> throw RuntimeException("Unknown position")
+        }
+    }
     private var lastChosenPosition = -1
     private var rightAnswerPosition = -1
-
-    open val gameEntity = gameRepository.getUnknownCountryGameEntity()
 
     /*
         Called by databinding upon user click on one of the buttons
@@ -62,7 +90,7 @@ open class GameViewModel @Inject constructor(private val gameRepository: GameRep
         }
     }
 
-    open fun setRightAnswer(position: Int) {
+    private fun setRightAnswer(position: Int) {
         rightAnswerPosition = position
     }
 
