@@ -13,7 +13,9 @@ import com.wordpress.lonelytripblog.funwithflags.di.InjectMe
 import com.wordpress.lonelytripblog.funwithflags.util.NavigationController
 import com.wordpress.lonelytripblog.funwithflags.viewmodels.GAME_STATE_IN_PROGRESS
 import com.wordpress.lonelytripblog.funwithflags.viewmodels.GAME_STATE_NO_MORE_FLAGS
+import com.wordpress.lonelytripblog.funwithflags.viewmodels.GAME_STATE_TRANSFER
 import com.wordpress.lonelytripblog.funwithflags.viewmodels.GameViewModel
+import kotlinx.android.synthetic.main.game_frag.*
 import javax.inject.Inject
 
 
@@ -43,6 +45,7 @@ class GameFragment : Fragment(), InjectMe {
             when (result) {
                 GAME_STATE_NO_MORE_FLAGS -> navigateToGameInfoFragment()
                 GAME_STATE_IN_PROGRESS -> displayGame()
+                GAME_STATE_TRANSFER -> hideGame()
             }
         })
     }
@@ -52,7 +55,11 @@ class GameFragment : Fragment(), InjectMe {
     }
 
     private fun displayGame() {
+        game_group.visibility = View.VISIBLE
+    }
 
+    private fun hideGame() {
+        game_group.visibility = View.GONE
     }
 
     override fun onDestroyView() {

@@ -10,7 +10,9 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:animateLayoutChanges="true"
+        android:id="@+id/constraint_layout">
 
         <ImageView
             android:layout_width="0dp"
@@ -19,6 +21,7 @@
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
+            android:id="@+id/flag"
             android:contentDescription="@string/image_description"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/guideline"
@@ -144,6 +147,13 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             app:layout_constraintGuide_percent="0.9" />
+
+        <androidx.constraintlayout.widget.Group
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/game_group"
+            android:visibility="gone"
+            app:constraint_referenced_ids="button, button2, button3, button4, flag"/>
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
