@@ -8,17 +8,17 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
+import com.wordpress.lonelytripblog.funwithflags.R
 import com.wordpress.lonelytripblog.funwithflags.data.db.Country
-import com.wordpress.lonelytripblog.funwithflags.databinding.RecapFragBinding
 import com.wordpress.lonelytripblog.funwithflags.di.InjectMe
 import com.wordpress.lonelytripblog.funwithflags.util.NavigationController
 import com.wordpress.lonelytripblog.funwithflags.viewmodels.RecapViewModel
+import kotlinx.android.synthetic.main.fragment_recap.*
 import javax.inject.Inject
 
 class RecapFragment : Fragment(), InjectMe {
 
     private lateinit var viewModel: RecapViewModel
-    private lateinit var recapFragBinding: RecapFragBinding
 
     @Inject
     lateinit var navigationController: NavigationController
@@ -27,29 +27,22 @@ class RecapFragment : Fragment(), InjectMe {
     lateinit var viewModelFactory: ViewModelProvider.Factory
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        recapFragBinding = RecapFragBinding.inflate(inflater, container, false)
-        return recapFragBinding.root
+        return inflater.inflate(R.layout.fragment_recap, container, false)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(RecapViewModel::class.java)
-        recapFragBinding.recapViewModel = viewModel
-        viewModel.getLearntCountry().observe(this, Observer<Country> { country ->
-            country?.bindToCurrentView() ?: navigateToInfoFragment()
+        viewModel.getLearntCountries().observe(viewLifecycleOwner, Observer<List<Country>> { countries ->
+            countries?.bindToCurrentView() ?: navigateToInfoFragment()
         })
     }
 
-    private fun Country.bindToCurrentView() {
-        recapFragBinding.country = this
+    private fun List<Country>.bindToCurrentView() {
+        countries_stack.adapter = StackAdapter(layoutInflater, this)
     }
 
     private fun navigateToInfoFragment() {
         navigationController.navigateToInfoFragmentAfterAllFlagsWereReviewed()
-    }
-
-    override fun onDestroyView() {
-        viewModel.getLearntCountry().removeObservers(this)
-        super.onDestroyView()
     }
 }

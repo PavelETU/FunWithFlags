@@ -8,7 +8,6 @@ interface GameRepo {
     fun requestNewGameEntity()
     fun saveCurrentFlagIntoLearntFlags()
     fun getAmountOfLeftFlags(): LiveData<Int>
-    fun getLearntFlag(): LiveData<Country>
-    fun nextLearntFlag()
+    fun getLearntFlags(): LiveData<List<Country>>
     fun getAmountOfLearntFlags(): LiveData<Int>
 }

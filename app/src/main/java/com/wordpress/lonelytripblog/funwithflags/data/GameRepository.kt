@@ -33,21 +33,8 @@ class GameRepository @Inject constructor(
 
     override fun getAmountOfLeftFlags() = db.countryDao().getCountForType(0)
 
-    override fun getLearntFlag(): LiveData<Country> {
-        learntCountry = MediatorLiveData()
-        if (learntCountries.isEmpty()) {
-            learntCountry.addSource(db.countryDao().getLearntCountries()) { countries ->
-                learntCountries = countries.toMutableList()
-                postValueToLearntCountry()
-            }
-        } else {
-            postValueToLearntCountry()
-        }
-        return learntCountry
-    }
-
-    override fun nextLearntFlag() {
-        postValueToLearntCountry()
+    override fun getLearntFlags(): LiveData<List<Country>> {
+        return db.countryDao().getLearntCountries()
     }
 
     override fun getAmountOfLearntFlags(): LiveData<Int> = db.countryDao().getCountForType(1)
