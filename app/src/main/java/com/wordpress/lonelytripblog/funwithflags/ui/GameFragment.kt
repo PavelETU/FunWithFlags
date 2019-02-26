@@ -50,8 +50,9 @@ class GameFragment : Fragment(), InjectMe {
         })
     }
 
+    // TODO create new constraint set with info instead of jumping into recap fragment
     private fun navigateToGameInfoFragment() {
-        navigationController.navigateToGameInformationFragment(true, false)
+        navigationController.navigateToRecapFragment()
     }
 
     private fun displayGame() {

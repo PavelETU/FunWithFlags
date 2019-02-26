@@ -16,8 +16,5 @@ abstract class FragmentsContributor {
     abstract fun contributeRecapFragment(): RecapFragment
 
     @ContributesAndroidInjector
-    abstract fun contributeInfoFragment(): InfoFragment
-
-    @ContributesAndroidInjector
     abstract fun contributeAboutFragment(): AboutFragment
 }

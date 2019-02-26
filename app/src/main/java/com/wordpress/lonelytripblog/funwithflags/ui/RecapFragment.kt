@@ -42,7 +42,8 @@ class RecapFragment : Fragment(), InjectMe {
         countries_stack.adapter = StackAdapter(layoutInflater, this)
     }
 
+    // TODO create new constraint set with info instead of jumping into new game fragment
     private fun navigateToInfoFragment() {
-        navigationController.navigateToInfoFragmentAfterAllFlagsWereReviewed()
+        navigationController.navigateToNewGameFragment()
     }
 }
