@@ -42,17 +42,19 @@ class GameRepository @Inject constructor(
     private fun updateGameEntityWithNextValueOrNullIfAllFlagsAreLearnt() {
         val countryLiveData = db.countryDao().getRandomCountryToLearn()
         unknownFlagGameEntity.addSource(countryLiveData) { country ->
-            if (country == null) {
-                unknownFlagGameEntity.postValue(null)
-                return@addSource
+            if (db.dbWasCreated.value == true) {
+                if (country == null) {
+                    unknownFlagGameEntity.postValue(null)
+                    return@addSource
+                }
+                currentCountry = country
+                val gameEntityLiveData = generateGameEntityWithCurrentCountryAsAnswer()
+                unknownFlagGameEntity.addSource(gameEntityLiveData) { gameEntity ->
+                    unknownFlagGameEntity.postValue(gameEntity)
+                    unknownFlagGameEntity.removeSource(gameEntityLiveData)
+                }
+                unknownFlagGameEntity.removeSource(countryLiveData)
             }
-            currentCountry = country
-            val gameEntityLiveData = generateGameEntityWithCurrentCountryAsAnswer()
-            unknownFlagGameEntity.addSource(gameEntityLiveData) { gameEntity ->
-                unknownFlagGameEntity.postValue(gameEntity)
-                unknownFlagGameEntity.removeSource(gameEntityLiveData)
-            }
-            unknownFlagGameEntity.removeSource(countryLiveData)
         }
     }
 

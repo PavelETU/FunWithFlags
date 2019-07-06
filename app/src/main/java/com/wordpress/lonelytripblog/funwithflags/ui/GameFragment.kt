@@ -33,7 +33,7 @@ class GameFragment : Fragment(), InjectMe {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         mGameFragBinding = GameFragBinding.inflate(inflater, container, false)
-        mGameFragBinding.setLifecycleOwner(this)
+        mGameFragBinding.lifecycleOwner = this
         return mGameFragBinding.root
     }
 
