@@ -14,7 +14,7 @@ private const val DB_NAME = "countries.db"
 @Database(entities = [(Country::class)], version = 1)
 abstract class CountriesDB : RoomDatabase() {
     abstract fun countryDao(): CountryDao
-    val dbWasCreated = MutableLiveData<Boolean>()
+    open val dbWasCreated = MutableLiveData<Boolean>()
 
     private fun updateStatus(context: Context) {
         if (context.getDatabasePath(DB_NAME).exists()) {

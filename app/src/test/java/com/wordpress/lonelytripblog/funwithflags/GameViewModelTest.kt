@@ -31,7 +31,7 @@ class GameViewModelTest {
     private lateinit var viewModel: GameViewModel
     private val gameEntityLiveData = MutableLiveData<GameEntity>()
     private val defaultGameEntity = GameEntity(R.drawable.germany,
-            ArrayList(Arrays.asList("Russia", "USA", "Thailand", "Germany")), 3)
+            listOf("Russia", "USA", "Thailand", "Germany"), 3)
 
     @Before
     fun setUp() {
