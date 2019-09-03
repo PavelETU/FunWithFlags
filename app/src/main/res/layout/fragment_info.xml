@@ -25,7 +25,7 @@
         tools:text="You learnt all flags! \n Congrats!" />
 
     <Button
-        android:id="@+id/continue_btn"
+        android:id="@+id/next_flag_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"

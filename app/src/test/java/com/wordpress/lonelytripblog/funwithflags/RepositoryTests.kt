@@ -85,6 +85,7 @@ class RepositoryTests {
         val liveDataCountriesNames = MutableLiveData<List<String>>()
         liveDataCountry.postValue(rightCountry)
         liveDataCountriesNames.postValue(countries)
+        `when`(db.dbWasCreated).thenReturn(MutableLiveData<Boolean>().apply { value = true } )
         `when`(dao.getRandomCountryToLearn()).thenReturn(liveDataCountry)
         `when`(dao.getRandomCountriesOtherThanChosen(ArgumentMatchers.anyInt())).thenReturn(liveDataCountriesNames)
         repository.getUnknownCountryGameEntity().observeForever(observer)

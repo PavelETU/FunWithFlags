@@ -38,7 +38,7 @@ class InfoFragment : Fragment(), InjectMe {
                 if (calledFromGameFragment) {
                     if (it.second == 0) {
                         view.flags_info.text = getString(R.string.recap_flags_all_flags_learnt, it.first)
-                        view.continue_btn.setOnClickListener {
+                        view.next_flag_btn.setOnClickListener {
                             navigationController.callRecapGameAsFromNavMenu.invoke()
                         }
                     } else {
@@ -46,28 +46,28 @@ class InfoFragment : Fragment(), InjectMe {
                     }
                 } else if (allFlagsWereReviewed) {
                     view.flags_info.text = getString(R.string.recap_flags_all_flags_reviewed, it.first)
-                    view.continue_btn.setOnClickListener {
+                    view.next_flag_btn.setOnClickListener {
                         navigationController.navigateToRecapFragment()
                     }
                 } else {
                     when {
                         it.second == 0 -> {
                             view.flags_info.text = getString(R.string.recap_flags_all_flags_learnt, it.first)
-                            view.continue_btn.setOnClickListener {
+                            view.next_flag_btn.setOnClickListener {
                                 navigationController.navigateToRecapFragment()
                             }
                         }
                         it.first == 0 -> {
                             view.flags_info.text = getString(R.string.recap_flags_no_flags_learnt, it.second)
-                            view.continue_btn.text = getString(R.string.start_game)
-                            view.continue_btn.setOnClickListener {
+                            view.next_flag_btn.text = getString(R.string.start_game)
+                            view.next_flag_btn.setOnClickListener {
                                 navigationController.callNewGameAsFromNavMenu.invoke()
                             }
                         }
                         else -> {
                             view.flags_info.text = getString(R.string.recap_flags_flags_partially_learnt,
                                     it.first, it.first + it.second, it.second)
-                            view.continue_btn.setOnClickListener {
+                            view.next_flag_btn.setOnClickListener {
                                 navigationController.navigateToRecapFragment()
                             }
                         }
@@ -77,7 +77,7 @@ class InfoFragment : Fragment(), InjectMe {
             }
         })
         if (!calledFromGameFragment) {
-            view.continue_btn.setOnClickListener { navigationController.navigateToRecapFragment() }
+            view.next_flag_btn.setOnClickListener { navigationController.navigateToRecapFragment() }
         }
         return view
     }

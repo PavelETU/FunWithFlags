@@ -14,6 +14,7 @@
     <string name="start_game">Start Game!</string>
     <string name="continue_btn">Recap</string>
     <string name="next_learnt_flag">Next</string>
+    <string name="prev_learnt_flag">Previous</string>
     <string name="recap_flags">Recap flags</string>
     <string name="recap_flags_all_flags_learnt">Congratulation! \nYou have learnt all %d flags.\nWould you like to recap them all?</string>
     <string name="recap_flags_flags_partially_learnt">You have learnt %d flags from %d.\nYou have %d flags to go.\nWould you like to review that you learnt so far?</string>

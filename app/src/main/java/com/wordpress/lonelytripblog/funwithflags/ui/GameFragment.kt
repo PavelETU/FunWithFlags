@@ -33,7 +33,7 @@ class GameFragment : Fragment(), InjectMe {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         mGameFragBinding = GameFragBinding.inflate(inflater, container, false)
-        mGameFragBinding.setLifecycleOwner(this)
+        mGameFragBinding.lifecycleOwner = this
         return mGameFragBinding.root
     }
 
@@ -41,7 +41,7 @@ class GameFragment : Fragment(), InjectMe {
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(GameViewModel::class.java)
         mGameFragBinding.gameViewModel = viewModel
-        viewModel.gameState.observe(this, Observer<Int> { result ->
+        viewModel.gameState.observe(viewLifecycleOwner, Observer<Int> { result ->
             when (result) {
                 GAME_STATE_NO_MORE_FLAGS -> navigateToGameInfoFragment()
                 GAME_STATE_IN_PROGRESS -> displayGame()
@@ -50,8 +50,9 @@ class GameFragment : Fragment(), InjectMe {
         })
     }
 
+    // TODO create new constraint set with info instead of jumping into recap fragment
     private fun navigateToGameInfoFragment() {
-        navigationController.navigateToGameInformationFragment(true, false)
+        navigationController.navigateToGameInformationFragment(true)
     }
 
     private fun displayGame() {
@@ -61,10 +62,4 @@ class GameFragment : Fragment(), InjectMe {
     private fun hideGame() {
         game_group.visibility = View.GONE
     }
-
-    override fun onDestroyView() {
-        viewModel.gameState.removeObservers(this)
-        super.onDestroyView()
-    }
-
 }

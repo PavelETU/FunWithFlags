@@ -1,9 +1,7 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
-
     <data>
-
         <variable
             name="recapViewModel"
             type="com.wordpress.lonelytripblog.funwithflags.viewmodels.RecapViewModel" />
@@ -12,7 +10,6 @@
             name="country"
             type="com.wordpress.lonelytripblog.funwithflags.data.db.Country" />
     </data>
-
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -30,7 +27,7 @@
             android:text="@{country.name}"
             android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/guideline7"
+            app:layout_constraintStart_toStartOf="@+id/border_btw_flag_and_info"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="Canada" />
 
@@ -47,7 +44,7 @@
             android:contentDescription="@string/image_description"
             app:imageResource="@{country.resourceId}"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/guideline7"
+            app:layout_constraintEnd_toStartOf="@+id/border_btw_flag_and_info"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="1.0"
@@ -66,36 +63,48 @@
             android:gravity="center"
             android:text="@{country.description}"
             app:autoSizeTextType="uniform"
-            app:layout_constraintBottom_toTopOf="@+id/continue_btn"
+            app:layout_constraintBottom_toTopOf="@+id/border_btw_info_and_buttons"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/guideline7"
+            app:layout_constraintStart_toStartOf="@+id/border_btw_flag_and_info"
             app:layout_constraintTop_toBottomOf="@+id/country_name"
             tools:text="Capital: Pretoria (executive), Bloemfontein (judicial), Cape Town (legislative)\nOfficial languages: 11 languages (Zulu, Xhosa, Afrikaans, English...)\nPopulation: 55,653,654 (2016)\nArea total: 1,221,037km^2" />
 
         <Button
-            android:id="@+id/continue_btn"
+            android:id="@+id/previous_flag_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
+            android:onClick="@{() -> recapViewModel.requestPrevLearntFlag()}"
+            android:text="@string/prev_learnt_flag"
+            android:visibility="@{recapViewModel.previousBtnVisibility}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/border_btw_flag_and_info"
+            app:layout_constraintTop_toBottomOf="@+id/border_btw_info_and_buttons" />
+
+        <Button
+            android:id="@+id/next_flag_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
-            android:layout_marginLeft="8dp"
             android:layout_marginRight="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
             android:onClick="@{() -> recapViewModel.requestNewLearntFlag()}"
             android:text="@string/next_learnt_flag"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="1.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/country_description" />
+            app:layout_constraintTop_toBottomOf="@+id/border_btw_info_and_buttons" />
 
         <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideline7"
+            android:id="@+id/border_btw_flag_and_info"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             app:layout_constraintGuide_percent="0.6" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/border_btw_info_and_buttons"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.8" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

@@ -35,7 +35,7 @@ class RecapFragment : Fragment(), InjectMe {
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(RecapViewModel::class.java)
         recapFragBinding.recapViewModel = viewModel
-        viewModel.getLearntCountry().observe(this, Observer<Country> { country ->
+        viewModel.getLearntCountry().observe(viewLifecycleOwner, Observer<Country> { country ->
             country?.bindToCurrentView() ?: navigateToInfoFragment()
         })
     }
@@ -46,10 +46,5 @@ class RecapFragment : Fragment(), InjectMe {
 
     private fun navigateToInfoFragment() {
         navigationController.navigateToInfoFragmentAfterAllFlagsWereReviewed()
-    }
-
-    override fun onDestroyView() {
-        viewModel.getLearntCountry().removeObservers(this)
-        super.onDestroyView()
     }
 }

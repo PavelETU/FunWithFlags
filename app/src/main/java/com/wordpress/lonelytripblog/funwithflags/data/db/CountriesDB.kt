@@ -5,12 +5,22 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import android.content.Context
+import androidx.lifecycle.MutableLiveData
 import com.wordpress.lonelytripblog.funwithflags.R
 import java.util.concurrent.Executors
+
+private const val DB_NAME = "countries.db"
 
 @Database(entities = [(Country::class)], version = 1)
 abstract class CountriesDB : RoomDatabase() {
     abstract fun countryDao(): CountryDao
+    open val dbWasCreated = MutableLiveData<Boolean>()
+
+    private fun updateStatus(context: Context) {
+        if (context.getDatabasePath(DB_NAME).exists()) {
+            dbWasCreated.postValue(true)
+        }
+    }
 
     // Create database by singleton pattern with use of volatile
     companion object {
@@ -19,20 +29,24 @@ abstract class CountriesDB : RoomDatabase() {
 
         fun getInstance(context: Context): CountriesDB =
                 INSTANCE ?: synchronized(this) {
-                    INSTANCE ?: buildDatabase(context).also { INSTANCE = it }
+                    INSTANCE ?: buildDatabase(context).also { INSTANCE = it; it.updateStatus(context) }
                 }
 
-        private fun buildDatabase(appContext: Context) = Room
-                .databaseBuilder(appContext, CountriesDB::class.java, "countries.db")
-                // Add callback to prepopulate database when database created on device
-                .addCallback(object : Callback() {
-                    override fun onCreate(db: SupportSQLiteDatabase) {
-                        super.onCreate(db)
-                        Executors.newSingleThreadExecutor().execute {
-                            getInstance(appContext).countryDao().insertCountries(countriesList)
+        private fun buildDatabase(appContext: Context): CountriesDB {
+            return Room
+                    .databaseBuilder(appContext, CountriesDB::class.java, DB_NAME)
+                    // Add callback to prepopulate database when database created on device
+                    .addCallback(object : Callback() {
+                        override fun onCreate(db: SupportSQLiteDatabase) {
+                            super.onCreate(db)
+                            Executors.newSingleThreadExecutor().execute {
+                                val database = getInstance(appContext)
+                                database.countryDao().insertCountries(countriesList)
+                                database.dbWasCreated.postValue(true)
+                            }
                         }
-                    }
-                }).build()
+                    }).build()
+        }
 
         private val countriesList = listOf(
                 Country(1, "Russia", R.drawable.ru, "Capital: Moscow\n" +
