@@ -6,7 +6,7 @@ import dagger.android.AndroidInjectionModule
 import javax.inject.Singleton
 
 @Singleton
-@Component(modules = [FunWithFlagsModule::class,
+@Component(modules = [FunWithFlagsModule::class, ActivityScopeModule::class,
     AndroidInjectionModule::class,
     ActivityContributor::class,
     ViewModelsProvider::class])

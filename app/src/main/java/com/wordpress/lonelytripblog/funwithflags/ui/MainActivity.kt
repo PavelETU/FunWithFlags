@@ -12,8 +12,10 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
+import androidx.fragment.app.FragmentFactory
 import com.google.android.material.navigation.NavigationView
 import com.wordpress.lonelytripblog.funwithflags.R
+import com.wordpress.lonelytripblog.funwithflags.util.GameFragmentFactory
 import com.wordpress.lonelytripblog.funwithflags.util.NavigationController
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
@@ -27,11 +29,14 @@ class MainActivity : AppCompatActivity(), HasAndroidInjector, NavigationView.OnN
     @Inject
     lateinit var navigationController: NavigationController
 
+    @Inject lateinit var fragmentFactory: FragmentFactory
+
     override fun androidInjector(): AndroidInjector<Any> = fragmentDispatchingAndroidInjector
 
     private lateinit var mDrawerToggle: ActionBarDrawerToggle
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        supportFragmentManager.fragmentFactory = fragmentFactory
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         val toolbar = findViewById<Toolbar>(R.id.toolbar)

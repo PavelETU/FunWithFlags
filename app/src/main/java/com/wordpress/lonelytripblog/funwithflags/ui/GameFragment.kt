@@ -9,7 +9,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import com.wordpress.lonelytripblog.funwithflags.databinding.GameFragBinding
-import com.wordpress.lonelytripblog.funwithflags.di.InjectMe
+import com.wordpress.lonelytripblog.funwithflags.util.GameFragmentFactory
 import com.wordpress.lonelytripblog.funwithflags.util.NavigationController
 import com.wordpress.lonelytripblog.funwithflags.viewmodels.GAME_STATE_IN_PROGRESS
 import com.wordpress.lonelytripblog.funwithflags.viewmodels.GAME_STATE_NO_MORE_FLAGS
@@ -19,16 +19,10 @@ import kotlinx.android.synthetic.main.game_frag.*
 import javax.inject.Inject
 
 
-class GameFragment : Fragment(), InjectMe {
-
+class GameFragment @Inject constructor(private val viewModelFactory: ViewModelProvider.Factory,
+                                       private val navigationController: NavigationController) : Fragment() {
     private lateinit var viewModel: GameViewModel
     private lateinit var mGameFragBinding: GameFragBinding
-
-    @Inject
-    lateinit var viewModelFactory: ViewModelProvider.Factory
-
-    @Inject
-    lateinit var navigationController: NavigationController
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
